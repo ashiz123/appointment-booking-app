@@ -1,5 +1,5 @@
 # Appointment booking system
-This is full stack appointment booking system creating with MERN
+This is full stack appointment booking system creating with MERN tech.
 
 
 ## Purpose
