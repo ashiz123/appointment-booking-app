@@ -1,0 +1,38 @@
+
+
+services:
+  frontend:
+   container_name: frontend
+   restart: always
+   build: ./frontend
+   ports: 
+     - "5173:5173"
+   links:
+     - backend  
+   volumes:
+      - ./frontend:/app               # Mount frontend code
+      - /app/node_modules      
+   
+      
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app                # Sync your local code with the container
+      - /app/node_modules     
+
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
