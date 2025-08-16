@@ -1,33 +1,25 @@
 import express from 'express';
+import { connect } from './src/config/db.js';
+import authRouter from './src/routes/authRoute.js';
+import appointmentRouter from './src/routes/appointmentRoute.js';
+import { authenticate } from './src/middlewares/authMiddleware.js';
+
 const app = express();
-const port = 3000;
-import { connect, getDb } from './src/config/db.js';
-import userRouter from './src/routes/userRoute.js';
-//setup morgan. Morgan is already installed
-app.use(express.json()); //if you sending request data using postman
-//Mongo connection setup
-async function main(){
-  try {
-    await connect();
-    console.log("MongoDB connection successful!");
-  } catch (err) {
-    console.error("MongoDB connection failed:", err);
-  }
+app.use(express.json()); // parse JSON bodies
+
+// Routes
+app.get('/', (req, res) => res.send('start project now'));
+app.use('/users', authRouter);
+app.use('/appointment', appointmentRouter);
+app.get('/protected', authenticate, (req, res) => {
+  res.status(200).json({ message: 'middleware passed' });
+});
+
+// Mongo connection (only if not testing)
+if (process.env.NODE_ENV !== 'test') {
+  connect()
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection failed:', err));
 }
 
-main();
-
-app.get('/', (req, res) => {
-  res.send('start project now')
-})
-
-app.use('/users', userRouter);
-
-
-
-
-
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+export default app; // ✅ export the app for tests
