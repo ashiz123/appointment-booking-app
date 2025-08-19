@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-const url = process.env.MONGODB_URI || "mongodb://mongodb:27017";
+const url = process.env.MONGODB_URI||"mongodb://mongodb:27017";
 const dbName = process.env.DB_NAME || "mydb"
 
 let dbInstance = null;

@@ -1,7 +1,7 @@
 
 import { saveUser, findUserByUsername } from "../repositories/userRepository.js";
 import bcrypt from 'bcrypt';
-
+import { jwtService } from "./jwtServices.js";
 
 export async function registerUser(userData){
     const existingUser = await findUserByUsername(userData.username);
@@ -26,6 +26,7 @@ export async function registerUser(userData){
 
 export async function loginUser(userData){
     const user = await findUserByUsername(userData.username);
+   
     
     if(!user){
         throw new Error('User not found');
@@ -37,6 +38,19 @@ export async function loginUser(userData){
         throw new Error('Invalid password');
     }
 
-    return user;
+  
+    const payload = {
+    userId: user.id,
+    username: user.username,
+    email: user.email
+    };
+
+    const token =  jwtService.sign(payload)
+
+    return {token, user: {
+        id: user.id,
+        username : user.username,
+        email : user.email
+    }};
 
 }

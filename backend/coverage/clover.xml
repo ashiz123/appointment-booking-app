@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1755340579689" clover="3.2.0">
+  <project timestamp="1755340579689" name="All files">
+    <metrics statements="72" coveredstatements="21" conditionals="21" coveredconditionals="8" methods="21" coveredmethods="1" elements="114" coveredelements="30" complexity="0" loc="72" ncloc="72" packages="7" files="10" classes="10"/>
+    <package name="backend">
+      <metrics statements="11" coveredstatements="7" conditionals="2" coveredconditionals="1" methods="4" coveredmethods="0"/>
+      <file name="app.js" path="/Users/ashizhamal/Desktop/appt-app/backend/app.js">
+        <metrics statements="11" coveredstatements="7" conditionals="2" coveredconditionals="1" methods="4" coveredmethods="0"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="19" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.config">
+      <metrics statements="13" coveredstatements="3" conditionals="8" coveredconditionals="4" methods="2" coveredmethods="0"/>
+      <file name="db.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/config/db.js">
+        <metrics statements="13" coveredstatements="3" conditionals="8" coveredconditionals="4" methods="2" coveredmethods="0"/>
+        <line num="2" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="3" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="23" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.controllers">
+      <metrics statements="9" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="0"/>
+      <file name="appointmentController.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/controllers/appointmentController.js">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <line num="4" count="0" type="stmt"/>
+      </file>
+      <file name="userController.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/controllers/userController.js">
+        <metrics statements="8" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.middlewares">
+      <metrics statements="3" coveredstatements="2" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+      <file name="authMiddleware.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/middlewares/authMiddleware.js">
+        <metrics statements="3" coveredstatements="2" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="7" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.repositories">
+      <metrics statements="7" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <file name="userRepository.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/repositories/userRepository.js">
+        <metrics statements="7" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="14" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.routes">
+      <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="appointmentRoute.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/routes/appointmentRoute.js">
+        <metrics statements="3" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+      </file>
+      <file name="authRoute.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/routes/authRoute.js">
+        <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="backend.src.services">
+      <metrics statements="23" coveredstatements="3" conditionals="9" coveredconditionals="2" methods="5" coveredmethods="0"/>
+      <file name="jwtServices.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/services/jwtServices.js">
+        <metrics statements="8" coveredstatements="3" conditionals="3" coveredconditionals="2" methods="3" coveredmethods="0"/>
+        <line num="3" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+      </file>
+      <file name="userServices.js" path="/Users/ashizhamal/Desktop/appt-app/backend/src/services/userServices.js">
+        <metrics statements="15" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="31" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="37" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>
