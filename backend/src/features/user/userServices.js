@@ -1,7 +1,7 @@
 
-import { saveUser, findUserByUsername } from "../repositories/userRepository.js";
+import { saveUser, findUserByUsername } from "./userRepository.js";
 import bcrypt from 'bcrypt';
-import { jwtService } from "./jwtServices.js";
+import { jwtService } from "../../shared/services/jwtServices.js";
 
 export async function registerUser(userData){
     const existingUser = await findUserByUsername(userData.username);

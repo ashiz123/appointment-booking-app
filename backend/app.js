@@ -1,8 +1,9 @@
 import express from 'express';
-import { connect } from './src/config/db.js';
-import authRouter from './src/routes/authRoute.js';
-import appointmentRouter from './src/routes/appointmentRoute.js';
-import { authenticate } from './src/middlewares/authMiddleware.js';
+import { connect } from './src/shared/config/db.js';
+import authRouter from './src/shared/routes/authRoute.js';
+import appointmentRouter from './src/shared/routes/appointmentRoute.js';
+import businessRouter from './src/shared/routes/buinessRoute.js';
+
 
 const app = express();
 app.use(express.json()); // parse JSON bodies
@@ -11,10 +12,7 @@ app.use(express.json()); // parse JSON bodies
 app.get('/', (req, res) => res.send('start project now'));
 app.use('/users', authRouter);
 app.use('/appointment', appointmentRouter);
-app.get('/protected', authenticate, (req, res) => {
-  res.status(200).json({ message: 'middleware passed' });
-});
-
+app.use('/business', businessRouter);
 // Mongo connection (only if not testing)
 if (process.env.NODE_ENV !== 'test') {
   connect()

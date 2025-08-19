@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest'; 
 import app from '../app.js';
-import { jwtService } from '../src/services/jwtServices.js';
+import { jwtService } from '../src/shared/services/jwtServices.js';
 
 //install babel to support test with ES modules. 
 
@@ -14,7 +14,7 @@ describe('Auth middleware', () => {
     
     
     it('should display middleware passed', async() => {
-
+ 
         const payload = {
             userId: 123,
             username: 'Ashizhamal',

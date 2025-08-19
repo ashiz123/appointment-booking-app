@@ -1,4 +1,4 @@
-import { registerUser, loginUser } from "../services/userServices.js";
+import { registerUser, loginUser } from "./userServices.js";
 
 export async function registerController(req, res){
   try{
