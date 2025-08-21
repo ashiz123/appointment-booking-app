@@ -12,7 +12,7 @@ This project was created as a learning exercise to:
 
 ## Project Structure
 -- Frontend/
--- Backend/ (Layered approach)
+-- Backend/ (Featured approach)
 - docker-compose.yml
 - README.md
 
