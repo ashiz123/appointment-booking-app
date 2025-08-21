@@ -1,25 +1,11 @@
-import { existingBusinessNameWithEmail , createBusinessRepo} from "./businessRepository.js";
+import { getDb } from "../../shared/config/db.js";
+import { BusinessRepository } from "./businessRepository.js";
+import { businessFactory } from "./businessFactory.js";
 
 
 
-
-export async function createBusinessService({name, address, email}){
-   
-   //validation
-    if(!name || !email){
-        throw new Error('Name and email are required');
-    }
-    const exists = await existingBusinessNameWithEmail(name, email);
-    if(exists){
-        throw new Error('Business already exist');
-    }
-
-    const businessToSave = {
-        name : name,
-        address : address,
-        email: email
-    };
-
-    return createBusinessRepo(businessToSave);
-
+export async function businessService (){
+    const db = await getDb();
+    const repo = new BusinessRepository(db);
+    return businessFactory(repo);
 }
