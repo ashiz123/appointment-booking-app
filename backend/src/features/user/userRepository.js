@@ -23,7 +23,7 @@ export class UserRepository {
     }
 
     async  findUserByUsername(username){
-    return await this.db.collection(this.collection).findOne({username});    
+       return await this.db.collection(this.collection).findOne({username});    
     }
 
 

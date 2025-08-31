@@ -31,7 +31,6 @@ export function userFactory(repository){
     //login
      async loginUser(userData){
             const user = await repository.findUserByUsername(userData.username);
-
             
             if(!user){
                 throw new Error('User not found');
@@ -44,7 +43,7 @@ export function userFactory(repository){
             }
 
             const payload = {
-            userId: user.id,
+            userId : user._id,    //toString() in case need
             username: user.username,
             email: user.email
             };
@@ -52,7 +51,6 @@ export function userFactory(repository){
             const token =  jwtService.sign(payload)
 
             return {success:true, token, user: {
-                id: user.id,
                 username : user.username,
                 email : user.email
             }};

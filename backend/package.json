@@ -22,7 +22,8 @@
     "morgan": "~1.9.1",
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.3",
@@ -32,5 +33,4 @@
     "nodemon": "^3.1.10",
     "supertest": "^7.1.4"
   }
-  
 }

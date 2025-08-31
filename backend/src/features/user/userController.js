@@ -1,4 +1,5 @@
 import { userService } from "./userServices.js";
+import { getLogger } from "../../shared/utils/logger.js";
 
 export async function registerController(req, res){
   try{
@@ -23,9 +24,11 @@ export async function registerController(req, res){
 export async function loginController(req, res){
   
     try{
+      // const logger = getLogger();
+      // logger.info(req.body);
        const service = await userService();
         const result = await service.loginUser(req.body);
-        console.log(result);
+        
         if(result.success){
           res.status(200).json({
             message: "user login successfully",
