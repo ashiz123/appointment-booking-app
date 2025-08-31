@@ -23,9 +23,10 @@ export async function registerController(req, res){
 export async function loginController(req, res){
   
     try{
+     
        const service = await userService();
         const result = await service.loginUser(req.body);
-        console.log(result);
+        
         if(result.success){
           res.status(200).json({
             message: "user login successfully",

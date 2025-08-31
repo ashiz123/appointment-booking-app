@@ -1,20 +1,21 @@
 import { businessService } from "./buinessService.js";
+import { handleError } from "../../shared/utils/errorHandler.js";
+import { responseHandler } from "../../shared/utils/responseHandler.js";
 
 
-export async function createBusiness(req, res){
-    try{
+export async function createBusiness(req, res, next){
+try{
+         const userId = req.user.id
+         console.log('user id controller', userId);
          const service = await businessService();
-         const result = await service.createBuisness(req.body);
+         const result = await service.createBuisness(req.body, userId);
          return res.status(201).json({
             message : "Business created successfully",
             data: result
          });
     }
     catch(err){
-        console.log('Error creating business', err);
-        return res.status(500).json({message: "Internal server error",
-           error: err.message
-        });
+         next(err)
     }
    
 
@@ -26,38 +27,33 @@ export async function deleteBusiness(req, res){
         const id = req.params.id;
         const service = await businessService();
         const result = await service.deleteBusiness(id);
-
-        if(result.success){
-            return res.status(200).json(result);
-        }else{
-            return res.status(404).json(result);
-        }
+        return responseHandler(res, result);
 
        
     }
     catch(err){
-        console.log('Error deleting business', err);
-        return res.status(500).json({
-            message : "Internal server error",
-            error : err.message,
-            success: false
-        })
+       return handleError(res, err);
     }
 }
 
 
-// export async function updateBusiness(){
+export async function updateBusiness(req, res){
 
-//     try{
-//         const result = await updateBusinessService()
+   try{
+        const id = req.params.id;
+        const updateData = req.body;
+        const service = await businessService();
+        const result = await service.updateBusiness(id, updateData);
+        console.log(result);
+        return responseHandler(res, result);
+   }
+   catch(err){
+        return handleError(res,err);
+    }
 
-//     }
-//     catch(err){
-//         console.log('Cannot update business', err);
-//         return res.status(200).json({
-//             message: "Internal server error",
-//             error: err.message
-//         })
-//     }
 
-// }
+
+   
+
+
+}

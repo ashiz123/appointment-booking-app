@@ -2,7 +2,7 @@
 export function businessFactory(repository){
 
  return {
-    async createBuisness({name, email, address}){
+    async createBuisness({name, email, address, start_time, end_time}, userId){
           if(!name || !email){
                 throw new Error('Name and email are required');
             }
@@ -10,31 +10,61 @@ export function businessFactory(repository){
             if(exists){
                 throw new Error('Business already exist');
             }
+
+            console.log(userId);
         
             const businessDetail = {
                 name : name,
+                user_id : userId,
                 address : address,
-                email: email
+                email: email,
+                start_time: start_time,
+                end_time: end_time
             };
 
             const insertedId = await repository.createBusinessRepository(businessDetail)
             return insertedId;
         },
 
+   
+     
+     async updateBusiness(id, updateData){
+        if(!id){
+           return { status:400, success: false, message: 'Business Id is required' };
+        }
+        if(!updateData || Object.keys(updateData).length === 0){
+            return { status:400, success: false, message: 'No update data provided' };
+        }
+
+        const result = await repository.updateBusinessRepository(id, updateData);
+     
+
+        if(result.matchedCount === 0){
+            return { status:400, success: false, message: 'Business not found' };
+        }
+
+        if(result.modifiedCount === 0){
+             return { status:400, success: false, message: 'Business update failed' };
+        }
+
+        return {status:200, success: true, data: id};
+
+     },
+
 
 
     async deleteBusiness(id){
         if(!id){
-           return { success: false, message: "Business id is required" };
+           return { status:400, success: false, message: "Business id is required" };
         }
 
         const result = await repository.deleteBusinessRepository(id);
 
         if(result.deletedCount == 0){
-            return {success: false, message: "No business found"};
+            return {status:400, success: false, message: "No business found"};
         }
 
-        return { success: true , business_id: id };
+        return {status:200,  success: true , data: id };
     }    
  }
 
