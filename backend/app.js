@@ -16,7 +16,6 @@ app.use(morgan("dev"));
 const logger = getLogger();
 logger.info('testing only');
 
-console.log('tesitng');
 
 // Routes
 app.get('/', (req, res) => res.send('start project now'));
