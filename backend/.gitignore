@@ -11,3 +11,8 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
+
+#ignore logs
+logs/
+backend/logs/
+*.log
