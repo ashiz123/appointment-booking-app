@@ -21,8 +21,10 @@ export function userFactory(repository){
             username : userData.username,
             email: userData.email,
             password: hashedPassword,
-            createdAt: new Date()
+            created_at: new Date()
         }
+
+        console.log(userToSave);
 
          const data =  await repository.saveUser(userToSave);
          return {success: true, newUser: data};

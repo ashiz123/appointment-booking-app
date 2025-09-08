@@ -5,14 +5,14 @@ export async function runSlotMigration(db){
     const slotSchema =  { $jsonSchema : {
                     bsonType : "object",
                     title : "Appointment slot validation",
-                    required : [ "business_id", "service_id" , "business_start" , "business_end",  "date" , "service_duration" , "seats"],
-                    properties : { business_id: { bsonType : "int", description : "business ID"},
-                                   service_id : {bsonType : "int",description : "service Id"},
-                                   business_start : { bsonType : "string",description : "business start time HH:MM format"},
-                                   business_end : { bsonType : "string", description : "business end time in HH:MM format" },
-                                   date: {bsonType : "string",  description : "date in YYYY-MM-DD format" },
-                                   service_duration : { bsonType : "int", minimum : 1, description : "duration of service in minute" },
-                                   seats : { bsonType : "int", minimum : 1, description : "number of seats, must be >=1 " }
+                    required : [ "business_id", "service_id" , "slot_start" , "slot_end",  "status" , "booked" , "total_seats"],
+                    properties : { business_id: { bsonType : "number", description : "business ID" , minimum: 1},
+                                   service_id : {bsonType : "number",description : "service Id", minimum:1},
+                                   slot_start : { bsonType : "date", description : "business start time "},
+                                   slot_end : { bsonType : "date", description : "business end time" },
+                                   status: {bsonType : "string", enum: ["available", "booked", "unavailable"]},
+                                   booked : { bsonType : "number", minimum : 0, description : "duration of service in minute" },
+                                   total_seats : { bsonType : "number", minimum : 1, description : "number of seats, must be >=1 " }
                      } 
                 }   
 

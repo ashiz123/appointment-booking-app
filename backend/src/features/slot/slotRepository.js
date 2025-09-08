@@ -1,3 +1,4 @@
+ 
  export class SlotRepository{
 
     constructor(db){
@@ -21,6 +22,8 @@
             booked : 0,
             total_seats : seats 
         }
+
+        console.log(slotDoc);
 
         
         const result = await this.db.collection(this.collectionName).insertOne(slotDoc);

@@ -33,7 +33,7 @@ export async function createSlot(req, res, next){
             });
         }
         catch(err){
-            console.log('Failed to create slot', err.message);
+            console.error(err.errInfo.details.schemaRulesNotSatisfied);
             return res.status(500).json({
                 message : err.message
             })
