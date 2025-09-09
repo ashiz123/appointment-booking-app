@@ -8,11 +8,11 @@ export async function runBusinessMigration(db){
     const businessSchema = {
            $jsonSchema: {
             bsonType: "object",
-            title: "Business migration",
-            required: ['name', 'email', 'address', 'start_time', 'end_time'],
+            title: "business schema",
+            required: ['name', 'owner', 'address', 'start_time', 'end_time'],
             properties: {
                 name: { bsonType: "string", description: "name of the business" },
-                email: { bsonType: "string", description: "email for the business" },
+                owner: {bsonType: "objectId", description: "Must be user_id(objectId)" },
                 address: { bsonType: "string", description: "address of business" },
                 start_time: { bsonType: "string", description: "Business start time" },
                 end_time: { bsonType: "string", description: "Business end time" }

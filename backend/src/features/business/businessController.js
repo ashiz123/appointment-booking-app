@@ -6,16 +6,18 @@ import { responseHandler } from "../../shared/utils/responseHandler.js";
 export async function createBusiness(req, res, next){
 try{
          const userId = req.user.id
-         console.log('user id controller', userId);
+        
          const service = await businessService();
          const result = await service.createBuisness(req.body, userId);
          return res.status(201).json({
             message : "Business created successfully",
-            data: result
+            business_id : result
          });
     }
     catch(err){
-         next(err)
+        console.log(err);
+        return res.status(500).json('issue found');
+        //  next(err)
     }
    
 
@@ -51,9 +53,10 @@ export async function updateBusiness(req, res){
         return handleError(res,err);
     }
 
+}
 
 
-   
-
-
+export async function getBusinessByUser(req, res, next){
+    const userId = req.user.id;
+    res.json(userId);
 }

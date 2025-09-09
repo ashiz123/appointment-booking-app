@@ -1,9 +1,11 @@
 
+import { ObjectId } from "mongodb";
+
 export function businessFactory(repository){
 
  return {
     async createBuisness({name, email, address, start_time, end_time}, userId){
-          if(!name || !email){
+          if(!name){
                 throw new Error('Name and email are required');
             }
             const exists = await repository.existingBusinessNameWithEmail(name, email);
@@ -11,16 +13,15 @@ export function businessFactory(repository){
                 throw new Error('Business already exist');
             }
 
-            console.log(userId);
-        
             const businessDetail = {
                 name : name,
-                user_id : userId,
+                owner : new ObjectId(userId),
                 address : address,
-                email: email,
                 start_time: start_time,
                 end_time: end_time
             };
+
+            console.log(businessDetail);
 
             const insertedId = await repository.createBusinessRepository(businessDetail)
             return insertedId;

@@ -8,8 +8,8 @@ async function migrate(){
         const db = await connect();
         
         await runBusinessMigration(db);
-        await runSlotMigration(db);
-        await runCreateUserSchema(db);
+        // await runSlotMigration(db);
+        // await runCreateUserSchema(db);
         console.log('Migration completed');
     }
     catch(err){
