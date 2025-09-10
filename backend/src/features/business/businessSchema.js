@@ -3,6 +3,7 @@
 
 import { createUpdateSchema } from "../../shared/utils/createUpdateSchema.js";
 
+
 export async function runBusinessMigration(db){
 
     const businessSchema = {

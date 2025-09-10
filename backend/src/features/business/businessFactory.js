@@ -66,7 +66,17 @@ export function businessFactory(repository){
         }
 
         return {status:200,  success: true , data: id };
-    }    
- }
+    },    
 
-}
+
+     async getBusinessByUser(userId){
+    if(!userId){
+            return {status : 400, success: false, message: "Auth user is not found"}
+        }
+        const result = await repository.getBusiness(userId);
+        console.log(result);
+        return {status: 200, success: true, data: result};
+    }
+
+
+ }}

@@ -1,6 +1,7 @@
 import { businessService } from "./buinessService.js";
 import { handleError } from "../../shared/utils/errorHandler.js";
 import { responseHandler } from "../../shared/utils/responseHandler.js";
+import { BusinessRepository } from "./businessRepository.js";
 
 
 export async function createBusiness(req, res, next){
@@ -16,7 +17,7 @@ try{
     }
     catch(err){
         console.log(err);
-        return res.status(500).json('issue found');
+        return handleError(res, err);
         //  next(err)
     }
    
@@ -56,7 +57,15 @@ export async function updateBusiness(req, res){
 }
 
 
-export async function getBusinessByUser(req, res, next){
-    const userId = req.user.id;
-    res.json(userId);
+export async function getBusinessByUser(req, res){
+    try{
+         const authId = req.user.id;
+         const service = await businessService();
+         const result = await service.getBusinessByUser(authId);
+         console.log(result);
+         return responseHandler(res, result);
+        }
+    catch(err){
+        return handleError(res,err);
+    }
 }

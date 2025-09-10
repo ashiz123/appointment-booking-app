@@ -2,14 +2,16 @@ import { connect } from "./db.js";
 import { runSlotMigration } from "../../features/slot/slotSchema.js";
 import { runBusinessMigration } from "../../features/business/businessSchema.js";
 import { runCreateUserSchema } from "../../features/user/userSchema.js";
+import { runBusinessOfferSchema } from "../../features/businessOffer/businessOfferSchema.js";
 
 async function migrate(){
     try{
         const db = await connect();
-        
-        await runBusinessMigration(db);
-        // await runSlotMigration(db);
         // await runCreateUserSchema(db);
+        // await runBusinessMigration(db);
+        await runBusinessOfferSchema(db);
+        // await runSlotMigration(db);
+        
         console.log('Migration completed');
     }
     catch(err){

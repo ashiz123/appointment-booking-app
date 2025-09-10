@@ -36,7 +36,8 @@ export class BusinessRepository{
    }
 
    async getBusiness(userId){
-        
+         const result = await this.db.collection(this.collectionName).find({owner: new ObjectId(userId)}).toArray();   
+         return result;
    }
 
 }
