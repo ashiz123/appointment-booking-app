@@ -1,4 +1,4 @@
-
+import {ObjectId} from 'mongodb'
 
 
 export function BusinessOfferFactory(repository){
@@ -14,15 +14,19 @@ export function BusinessOfferFactory(repository){
             const offerData = {
                 name : name,
                 description : description,
+                businessId: new ObjectId(businessId),
                 price : price,
-                durationMinute: duration,
-                businessId: businessId,
-                category : category ?? null,
+                duration: duration,
+                // category : category ?? null,
                 created_at : new Date(),
                 updated_at : new Date()
             }
-            const insertedId = await repository.create(offerData);
-            return insertedId;
+            const businessOfferId = await repository.create(offerData);
+            return {
+            status: 200,    
+            success: true,
+            data: businessOfferId
+           };
         },
 
         async updateService(id, updates){

@@ -1,5 +1,4 @@
 
-
 import { ObjectId } from "mongodb";
 
 export class BusinessRepository{
@@ -12,7 +11,7 @@ export class BusinessRepository{
 
 
     async createBusinessRepository(business){
-        const result = await this.db.collection(this.collectionName).insrtOne(business);
+        const result = await this.db.collection(this.collectionName).insertOne(business);
         const businessId = result.insertedId;
         return businessId;
     }
@@ -37,7 +36,8 @@ export class BusinessRepository{
    }
 
    async getBusiness(userId){
-        
+         const result = await this.db.collection(this.collectionName).find({owner: new ObjectId(userId)}).toArray();   
+         return result;
    }
 
 }

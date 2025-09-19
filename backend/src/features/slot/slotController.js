@@ -1,8 +1,7 @@
 import { slotService } from "./slotService.js";
-import { getLogger } from "../../shared/utils/logger.js";
 import { minutesToDate, timeToMinute } from "../../shared/utils/dateTimeCovert.js";
-
-// const logger = getLogger();
+import { getLogger } from "../../shared/utils/logger.js";
+const logger = getLogger();
 
 
 
@@ -49,8 +48,37 @@ export async function createSlot(req, res, next){
 
 
 
-    // const service = await slotService();
-    // const temp_business_id = '68a86562344fe183e9fa0587'
-    // const generateSlot = await service.createSlot()
+   
     
 }
+
+
+export async function getSlotsByDate(req, res, next){
+  try{
+    const filterDay = new Date(req.body.date);       
+    const tomorrow = new Date(filterDay);        
+    tomorrow.setDate(filterDay.getDate() + 1); 
+    
+    const service = await slotService();
+    const data = await service.showSlotByDate(filterDay, tomorrow);
+    logger.info(data);
+
+    return res.status(200).json({data}); 
+  }
+  catch(err){
+    return res.status(500).json(err.message);
+  }
+}
+
+
+export async function bookSlot(req, res, next){
+    try{
+
+    }
+    catch{
+
+    }
+}
+
+
+

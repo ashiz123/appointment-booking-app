@@ -1,6 +1,5 @@
-import { getLogger } from "../../shared/utils/logger.js"
 
-const logger = getLogger();
+
 
 export function slotFactory(repository){
 
@@ -8,24 +7,22 @@ export function slotFactory(repository){
 
      async createSlot(start_time, end_time, businessId, serviceId, seats) {
         const slot = await repository.createSlot(start_time, end_time, businessId, serviceId, seats);
-   
-        if (slot.acknowledged) {
-        return {
-            success: true,
-            insertedId: slot.insertedId
-          };
-        } else {
-          return { success: false, message: "Failed to insert slot" };
-        }
-     
-    },
+        return slot.acknowledged ? { success: true, insertedId: slot.insertedId } : { success: false };
+     },
 
     async updateSlot(){
+      const slot = await repository.updateSlot();
+      return slot.acknowledged ? { success: true } : { success: false };
 
+    },
+
+    async showSlotByDate(day, nextDay){
+      const slot = await repository.showSlotByDate(day , nextDay);
+      return slot;
     },
 
     async deleteSlot(){
-
+      
     }
    }
 
