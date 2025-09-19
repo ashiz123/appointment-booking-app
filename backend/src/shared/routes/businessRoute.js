@@ -7,8 +7,8 @@ import { createBusinessOfferValidation } from '../../features/businessOffer/busi
 import { validateRequest } from '../middlewares/validationRequest.js';
 import { createBusiness, deleteBusiness, updateBusiness, getBusinessByUser } from '../../features/business/businessController.js';
 import { createBusinessOffer} from '../../features/businessOffer/businessOfferController.js';
-
-import { createSlot } from '../../features/slot/slotController.js';
+import { isValidateDate } from '../middlewares/isValidateDate.js';
+import { createSlot, getSlotsByDate } from '../../features/slot/slotController.js';
 
 
 
@@ -18,10 +18,8 @@ router.delete('/delete/:id', deleteBusiness);
 router.put('/update/:id', updateBusiness);
 router.get('/byAuthUser', authenticate, getBusinessByUser);
 
-//Business offer 
+
 router.post('/service/create', createBusinessOfferValidation, validateRequest, authenticate, createBusinessOffer);
-
-
 //Generate appointment slot
 router.post('/appointment_slot/create' ,
     createSlotValidation,

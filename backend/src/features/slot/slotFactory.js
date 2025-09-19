@@ -11,11 +11,18 @@ export function slotFactory(repository){
      },
 
     async updateSlot(){
+      const slot = await repository.updateSlot();
+      return slot.acknowledged ? { success: true } : { success: false };
 
     },
 
-    async deleteSlot(){
+    async showSlotByDate(day, nextDay){
+      const slot = await repository.showSlotByDate(day , nextDay);
+      return slot;
+    },
 
+    async deleteSlot(){
+      
     }
    }
 
