@@ -97,3 +97,63 @@ This app is currently under development.
 I will keep updating this README with setup instructions, features, and other details as the project evolves.
 
 
+# 📌 Appointment App API
+
+Version: **Current**  
+Base URL: `http://localhost:3000`  
+Auth: **Bearer Token (JWT)** for protected routes  
+
+---
+
+## 🔑 Auth APIs - /users
+
+| Method | Endpoint          | Description         |
+|--------|-------------------|---------------------|
+| POST   | `/register` | Register a new user |
+| POST   | `/login`    | Login and get token |
+| POST   | `/logout`   | Logout user         |
+
+---
+
+## 🏢 Business APIs - /business
+
+            | Method | Endpoint                   | Description                          |
+            |--------|-----------------------------|--------------------------------------|
+            | POST   | `/create`          | Create a new business (auth required) |
+            | PUT    | `/update/:id`      | Update business by ID (owner only)   |
+            | GET    | `/byAuthUser`      | Get business owned by auth user      |
+            | DELETE | `/delete/:id`      | Delete business by ID (owner only)   |
+
+            ---
+
+            ## 💇 Services APIs
+
+            | Method | Endpoint                   | Description               |
+            |--------|-----------------------------|---------------------------|
+            | POST   | `/service/create` | Create a new service under a business |
+
+            ---
+
+            ## 📅 Appointment Slot APIs
+
+            | Method | Endpoint                        | Description              |
+            |--------|--------------------------------|--------------------------|
+            | GET    | `/appointment-slot`            | Get all available slots  |
+            | POST   | `/customer/book_appointment`   | Book an appointment slot |
+
+            ---
+
+## 👤 Customer APIs - /customer
+
+| Method | Endpoint                | Description         |
+|--------|--------------------------|---------------------|
+| GET    | `/book_slot`   | Get booked slots    |
+| POST   | `/book_appointment` | Book appointment |
+| POST   | `/appointment_slot/by_date` | Get appointments by date 
+---
+
+### ⚠️ Notes
+- All protected endpoints require:  
+  ```http
+  Authorization: Bearer <token>
+  

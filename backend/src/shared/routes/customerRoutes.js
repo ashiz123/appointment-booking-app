@@ -8,7 +8,7 @@ import { bookSlotValidation } from '../../features/bookSlot/bookSlotValidation.j
 
 
 
-router.post('/appointment_slot/byDate',isValidateDate,  getSlotsByDate);
+router.post('/appointment_slot/by_date',isValidateDate,  getSlotsByDate);
 router.post('/book_appointment',bookSlotValidation, validateRequest,  booking );
 
 

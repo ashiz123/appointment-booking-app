@@ -33,9 +33,13 @@ export class BookSlotRepository {
 
     }
 
+
+
+
     async cancleBookedSlot(bookingId){
        try{
         const result = await this.db.collection(this.collectionName).deleteOne({_id: bookingId});
+        console.log('Booked appointment successfully canceled');
         return result;
        }catch(err){
          throw new Error('Error occured while deleting the record');

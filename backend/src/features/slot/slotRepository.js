@@ -50,7 +50,7 @@ const logger = getLogger();
 
             // Check if seats are available
             if (slot.booked >= slot.total_seats) {
-                throw new Error("All seats are booked");
+               throw new Error("All seats are booked");
             }
 
             // Atomic increment only if seats are available
@@ -58,6 +58,8 @@ const logger = getLogger();
                 { _id: slot_id, booked: { $lt: slot.total_seats } },
                 { $inc: { booked: 1 }, $set: { updated_at: new Date() } }
             );
+
+            console.log('update result', result);
 
             if (result.matchedCount === 0 || result.modifiedCount === 0) {
                 throw new Error("Failed to update booked seats");

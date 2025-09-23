@@ -2,6 +2,7 @@
 
 import { ObjectId } from "mongodb";
 import { buildBooking } from "./bookingSlotModel.js";
+import { sendAppointmentEmail } from "../../shared/config/mailer.js"; 
 
 
 
@@ -17,28 +18,31 @@ export function bookSlotFactory(bookRepo, slotRepo){
              const slot_id = new ObjectId(appointment_slot_id);
              const slotBooked = await bookRepo.slotAlreadyBooked(slot_id, email);
              let result;
+             let bookingResult;
              
              if (slotBooked) {
                 return { success: false, status: 400, message: "Booking already exists for this user" };
              }
 
              try{
-                const bookingResult = await bookRepo.bookingSlot(
+                 bookingResult = await bookRepo.bookingSlot(
                        buildBooking(slot_id, fullname, email, phone)
                  );
 
                  if(!bookingResult.acknowledged){
-                    throw new Error("Booking could not be created").status
+                    throw new Error("Booking could not be created");
                  }
 
                  const updateBookResult = await slotRepo.updateBookedSeats(slot_id);
 
 
                 if(updateBookResult.acknowledged && updateBookResult.modifiedCount > 0){
-                    result = {success:true, status:200, message : "Slot booked successfully"}
+                    result = {success:true, status:200, message : "Slot booked successfully"};
+                    await sendAppointmentEmail(email, fullname, new Date());
                 }
                 else
                 {
+                    console.log('Cancel booking control is here');
                    await bookRepo.cancleBookedSlot(bookingResult.insertedId);
                    result = {success : false,  status: 400, message: "Problem occured with appointment_slot update"};
                 }
@@ -46,10 +50,12 @@ export function bookSlotFactory(bookRepo, slotRepo){
                 return result;
             }
              catch(err){
+
+               
                 if(bookingResult?.insertedId){
                     bookRepo.cancleBookedSlot(bookingResult.insertedId);
                 }
-                throw new Error(`Error occured : ${err.message}`);
+                return {success: false, status:409, message : err.message}
              }
             },
                    

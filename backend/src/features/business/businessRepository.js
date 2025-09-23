@@ -22,8 +22,8 @@ export class BusinessRepository{
    }
 
 
-   async  deleteBusinessRepository(id){
-        return await this.db.collection(this.collectionName).deleteOne({_id: new ObjectId(id) });
+   async  deleteBusinessRepository(businessId){
+      return await this.db.collection(this.collectionName).deleteOne({_id: new ObjectId(businessId) });
         
    }
 
@@ -35,7 +35,12 @@ export class BusinessRepository{
         return result;
    }
 
-   async getBusiness(userId){
+   async getBusinessById(businessId){
+        const result = await this.db.collection(this.collectionName).findOne({_id : new ObjectId(businessId)});
+        return result;
+   }
+
+  async getBusiness(userId){
          const result = await this.db.collection(this.collectionName).find({owner: new ObjectId(userId)}).toArray();   
          return result;
    }

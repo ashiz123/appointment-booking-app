@@ -14,8 +14,8 @@ import { createSlot, getSlotsByDate } from '../../features/slot/slotController.j
 
 //Business
 router.post('/create', createBusinessValidation, validateRequest, authenticate, createBusiness);
-router.delete('/delete/:id', deleteBusiness);
-router.put('/update/:id', updateBusiness);
+router.delete('/delete/:id', authenticate,  deleteBusiness);
+router.put('/update/:id',authenticate, updateBusiness);
 router.get('/byAuthUser', authenticate, getBusinessByUser);
 
 

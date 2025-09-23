@@ -27,8 +27,9 @@ try{
 export async function deleteBusiness(req, res){
     try{
         const id = req.params.id;
+        const userId = req.user.id;
         const service = await businessService();
-        const result = await service.deleteBusiness(id);
+        const result = await service.deleteBusiness(id, userId);
         return responseHandler(res, result);
 
        
@@ -43,14 +44,15 @@ export async function updateBusiness(req, res){
 
    try{
         const id = req.params.id;
+        const userId = req.user.id;
         const updateData = req.body;
         const service = await businessService();
-        const result = await service.updateBusiness(id, updateData);
+        const result = await service.updateBusiness(id, updateData, userId);
         console.log(result);
         return responseHandler(res, result);
    }
    catch(err){
-        return handleError(res,err);
+        return handleError(res, err);
     }
 
 }
