@@ -9,6 +9,8 @@ import errorHandler from './src/shared/middlewares/errorHandlingMiddleware.js';
 import { slotIndex, creatingBookingSlotIndex } from './src/features/slot/slotIndex.js';
 dotenv.config();
 
+
+
 const app = express();
 app.use(express.json()); // parse JSON bodies
 app.use(morgan("dev"));

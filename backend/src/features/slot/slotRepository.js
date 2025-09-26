@@ -42,52 +42,66 @@ const logger = getLogger();
 
 
 
-    async updateBookedSeats(slot_id){
+    async bookingSeat(slot_id){
         try {
-            // Fetch the slot first
-            const slot = await this.fetchSeatsBySlotId(slot_id);
+            const slot = await this.db.collection("appointment_slots").findOne({ _id: slot_id });
             if (!slot) throw new Error("Slot not found");
 
-            // Check if seats are available
-            if (slot.booked >= slot.total_seats) {
-               throw new Error("All seats are booked");
-            }
-
-            // Atomic increment only if seats are available
-            const result = await this.db.collection(this.collectionName).updateOne(
+           const result = await this.db.collection(this.collectionName).updateOne(
                 { _id: slot_id, booked: { $lt: slot.total_seats } },
                 { $inc: { booked: 1 }, $set: { updated_at: new Date() } }
             );
-
-            console.log('update result', result);
-
             if (result.matchedCount === 0 || result.modifiedCount === 0) {
-                throw new Error("Failed to update booked seats");
+                throw new Error("Failed to book seat");
             }
 
             return result;
         } catch (err) {
-            logger.error(`updateBookedSeats failed for slot_id ${slot_id}: ${err.message}`);
+            logger.error(`Book seat failed for slot_id ${slot_id}: ${err.message}`);
             throw err;
         }
     }
 
 
+    async unbookingSeat(slotId){
+        try{
+            const result = await this.db.collection(this.collectionName).updateOne(
+                {_id : slotId, booked : {$gt : 0}},
+                {$set : {updated_at : new Date()} , $inc : {booked: -1}}
+            
+            )
+
+            if (result.matchedCount === 0 || result.modifiedCount === 0) {
+                    throw new Error("Failed to unbook seat");
+            }
+
+            return result;
+        }
+        catch(err){
+            throw new Error(`Unbook seat failed : ${err.message}`)
+        }
+
+
+    }
+
+
     
-
-
-
-
-
-    async  showSlotByDate(day, nextDay){
-        logger.info(day);
-        logger.info( nextDay);
+     async  showSlotByDate(day, nextDay){
         if(!day) throw new Error('Date is required');
-
         const pipeline = await getSlotsByDatePipeline(day, nextDay);
         const results = await this.db.collection(this.collectionName).aggregate(pipeline).toArray();
         return results;
     }
+
+
+    //Valid date is greater than current date
+    async isDateValid(slot_id){
+        const result = await this.db.collection(this.collectionName).findOne({ _id: slot_id });
+        if (!result) throw new Error("No document found");
+        if (!(result.slot_start instanceof Date)) throw new Error("Invalid slot_start value");
+        return result.slot_start > new Date();
+    }
+        
 
 }
 

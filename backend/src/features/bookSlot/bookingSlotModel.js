@@ -1,6 +1,7 @@
 
+import { v4 as uuidv4 } from "uuid";
 
-export function buildBooking(slot_id, fullname, email, phone)
+export function buildBooking(slot_id, fullname, email, phone, rescheduled_count=0)
 {
 
 return {
@@ -8,6 +9,8 @@ return {
             fullname ,
             email,
             phone ,
+            booking_reference: uuidv4(),
+            rescheduled_count,
             created_at : new Date(),
             updated_at : new Date()
             }
