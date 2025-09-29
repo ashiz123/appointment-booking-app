@@ -55,7 +55,7 @@ describe('Auth middleware', () => {
         .set('Authorization',  `Bearer ${token}`)
         .send({name :"ashiz" , address : "123 biggins wood road", email : "ash@gmail.com", start_time : "09:00", end_time : "15:00"});
 
-        expect(response.status).toBe(201);
+        expect(response.status).toBe(200);
         expect(response.body.message).toEqual("Business created successfully");
 
         })

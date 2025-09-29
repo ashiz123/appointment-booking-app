@@ -13,12 +13,14 @@ const logger = getLogger();
 
   async createSlot(slot_start, slot_end, businessId, serviceId, seats){
 
+  
+
         if (!slot_start || !slot_end) throw new Error("Slot start and end required");
          if(!seats || seats < 1) throw new Error("Seats is required and must me atleast 1")
 
         const slotDoc = {
-            business_id : businessId,
-            service_id : serviceId,
+            business_id : new ObjectId(businessId),
+            service_id : new ObjectId(serviceId),
             slot_start : new Date(slot_start),
             slot_end : new Date(slot_end),
             status : "available",
@@ -26,7 +28,7 @@ const logger = getLogger();
             total_seats : seats 
         }
 
-        console.log(slotDoc);
+        console.log('slotdoc', slotDoc);
 
         const result = await this.db.collection(this.collectionName).insertOne(slotDoc);
         return result;
@@ -47,13 +49,14 @@ const logger = getLogger();
             const slot = await this.db.collection("appointment_slots").findOne({ _id: slot_id });
             if (!slot) throw new Error("Slot not found");
 
+            if (slot.total_seats - slot.booked === 0) {
+            throw new Error("Slot booking trying to exceed total seats");
+            }
+
            const result = await this.db.collection(this.collectionName).updateOne(
                 { _id: slot_id, booked: { $lt: slot.total_seats } },
                 { $inc: { booked: 1 }, $set: { updated_at: new Date() } }
             );
-            if (result.matchedCount === 0 || result.modifiedCount === 0) {
-                throw new Error("Failed to book seat");
-            }
 
             return result;
         } catch (err) {

@@ -6,7 +6,7 @@ import authRouter from './src/shared/routes/authRoute.js';
 import businessRouter from './src/shared/routes/businessRoute.js';
 import customerRouter from './src/shared/routes/customerRoutes.js'
 import errorHandler from './src/shared/middlewares/errorHandlingMiddleware.js';
-import { slotIndex, creatingBookingSlotIndex } from './src/features/slot/slotIndex.js';
+import { slotIndex, bookingIndex } from './src/features/slot/slotIndex.js';
 dotenv.config();
 
 
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'development') {
     .then(async (db) => {
       console.log('MongoDB connected')
       await slotIndex(db);
-      // await creatingBookingSlotIndex(db);
+      await bookingIndex(db);
     })
     .catch(err => console.error('MongoDB connection failed:', err));
 }

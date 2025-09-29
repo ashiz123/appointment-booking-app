@@ -60,7 +60,7 @@ export async function updateBusiness(req, res){
 
 export async function getBusinessByUser(req, res){
     try{
-         const authId = req.user.id;
+          
          const service = await businessService();
          const result = await service.getBusinessByUser(authId);
          console.log(result);
@@ -70,3 +70,6 @@ export async function getBusinessByUser(req, res){
         return handleError(res,err);
     }
 }
+
+
+

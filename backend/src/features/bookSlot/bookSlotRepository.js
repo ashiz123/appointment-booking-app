@@ -36,24 +36,13 @@ export class BookSlotRepository {
       }
     }
 
-   async cancleBookedSlot(bookingId){
-       try{
-        const result = await this.db.collection(this.collectionName).deleteOne({_id: bookingId});
-        console.log('Booked appointment successfully canceled');
-        return result;
-       }catch(err){
-         throw new Error('Error occured while deleting the record');
-       }
-    }
 
-  
-
-
-
-    async rescheduleBooking(booking_reference, slot_id){
+  async rescheduleBooking(booking_reference, slot_id){
      try{
        const result = await this.db.collection(this.collectionName).updateOne({
-        booking_reference},  {$set : {appointment_slot_id : slot_id }}, {$inc : {rescheduled_count : 1}});
+        booking_reference},  {$set : {appointment_slot_id : slot_id } , $inc : {rescheduled_count : 1}});
+
+        console.log("result reschedule", result);
 
       if(result.matchedCount === 0){
         throw new Error("Booking not found");
@@ -69,10 +58,7 @@ export class BookSlotRepository {
      }
      catch(error){
        throw new Error(`Failed to reschedule booking: ${error.message}`);
-     }
-
-
-    }
+     }}
 
 
     async fetchBookingById(matchFilter){
@@ -83,6 +69,19 @@ export class BookSlotRepository {
           throw new Error("Failed to fetch newly inserted booking");
         }
         return response[0];
+    }
+
+
+
+
+   async cancleBookedSlot(bookingId){
+       try{
+        const result = await this.db.collection(this.collectionName).deleteOne({_id: bookingId});
+        console.log('Booked appointment successfully canceled');
+        return result;
+       }catch(err){
+         throw new Error('Error occured while deleting the record');
+       }
     }
 
 

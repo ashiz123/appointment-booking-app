@@ -32,7 +32,7 @@ export async function rescheduleController(req, res, next){
     const {booking_reference, appointment_slot_id} = req.body;
     const service = await bookSlotService();
     const result = await service.rescheduleAppointment(booking_reference, appointment_slot_id);
-
+    return responseHandler(res, result);
   }
   catch(err){
     return res.status(400).json({

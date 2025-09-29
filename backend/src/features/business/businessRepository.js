@@ -40,9 +40,22 @@ export class BusinessRepository{
         return result;
    }
 
-  async getBusiness(userId){
-         const result = await this.db.collection(this.collectionName).find({owner: new ObjectId(userId)}).toArray();   
+  async getBusinessByAuthUser(businessId , authId){
+         const result = await this.db.collection(this.collectionName).findOne({
+            _id : new ObjectId(businessId),
+            owner: new ObjectId(authId)
+         });
+
+         console.log('business', businessId, authId);
+
+         if(!result){
+            throw new Error("Business is not belong to authenticated user");
+         }
+         
          return result;
    }
+
+
+ 
 
 }

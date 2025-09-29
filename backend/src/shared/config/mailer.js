@@ -18,15 +18,15 @@ var transporter = nodemailer.createTransport({
 //compose a message
 //Add the reschedule and Cancle link .
 
-export async function sendAppointmentEmail(to, name, dateTime, booking_reference) {
+export async function sendAppointmentEmail(to, name, dateTime, booking_reference, text = "Your appointment is scheduled for ") {
   try {
     await transporter.sendMail({
       from: '"Appointments" <appointments@myapp.com>',
       to: to, //receipents
-      subject: "Your Appointment is Scheduled",
-      text: `Hello ${name},\nYour appointment is scheduled for ${dateTime} \n  Thank you!`,
+      subject: `${text}`,
+      text: `Hello ${name},\n ${text} ${dateTime} \n  Thank you!`,
       html: `<p>Hello <b>${name}</b>,</p>
-             <p>Your appointment is scheduled for <b>${dateTime}</b>.</p>
+             <p>${text} <b>${dateTime}</b>.</p>
              <p>Booking reference : <b>${booking_reference} </b> </p>
              <p>Thank you!</p>`
     });
