@@ -12,10 +12,7 @@ const logger = getLogger();
     }
 
   async createSlot(slot_start, slot_end, businessId, serviceId, seats){
-
-  
-
-        if (!slot_start || !slot_end) throw new Error("Slot start and end required");
+    if (!slot_start || !slot_end) throw new Error("Slot start and end required");
          if(!seats || seats < 1) throw new Error("Seats is required and must me atleast 1")
 
         const slotDoc = {
@@ -41,10 +38,7 @@ const logger = getLogger();
     }
     
   
-
-
-
-    async bookingSeat(slot_id){
+  async bookingSeat(slot_id){
         try {
             const slot = await this.db.collection("appointment_slots").findOne({ _id: slot_id });
             if (!slot) throw new Error("Slot not found");
@@ -104,6 +98,8 @@ const logger = getLogger();
         if (!(result.slot_start instanceof Date)) throw new Error("Invalid slot_start value");
         return result.slot_start > new Date();
     }
+
+   
         
 
 }

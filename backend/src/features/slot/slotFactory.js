@@ -10,8 +10,6 @@ export function slotFactory(slotRepository, businessRepo, businessOfferRepo){
 
       //check if the business of authenticated user 
       await businessRepo.getBusinessByAuthUser(businessId, authId);
-
-    
      //check if the service of current passed business
       await businessOfferRepo.getBusinessDetail(businessId, serviceId);
 
@@ -20,7 +18,12 @@ export function slotFactory(slotRepository, businessRepo, businessOfferRepo){
       }
 
       catch(err){
+        if(err.code === 11000){
+          throw new Error('Duplicate slot create in the same date is not acceptable');
+        }else{
           throw new Error(`The given data cannot create the appointment slot : ${err}`)
+        }
+          
       }
 
      },

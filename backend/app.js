@@ -6,7 +6,8 @@ import authRouter from './src/shared/routes/authRoute.js';
 import businessRouter from './src/shared/routes/businessRoute.js';
 import customerRouter from './src/shared/routes/customerRoutes.js'
 import errorHandler from './src/shared/middlewares/errorHandlingMiddleware.js';
-import { slotIndex, bookingIndex } from './src/features/slot/slotIndex.js';
+import { slotIndex } from './src/features/slot/slotIndex.js';
+import { bookingIndex } from './src/features/bookSlot/bookingIndex.js';
 dotenv.config();
 
 

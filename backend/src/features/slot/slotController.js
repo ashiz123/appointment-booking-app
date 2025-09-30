@@ -11,9 +11,11 @@ export async function createSlot(req, res, next){
 
   
     const {business_id , service_id, business_start, business_end, service_duration, date, seats} = req.body;
+
+
+
    
     const authId = req.user.id;
-    console.log(authId);
     const slots = [];
     const start = timeToMinute(business_start);
     const end = timeToMinute(business_end);
@@ -49,13 +51,7 @@ export async function createSlot(req, res, next){
     return res.status(200).json({
         slots
     });
-
-
-
-
-   
-    
-}
+ }
 
 
 export async function getSlotsByDate(req, res, next){
