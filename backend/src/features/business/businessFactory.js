@@ -1,5 +1,6 @@
 
 import { ObjectId } from "mongodb";
+import { getOwnershipBusiness } from "../../shared/utils/checkBusinessOwnership.js";
 
 export function businessFactory(repository){
 
@@ -27,9 +28,9 @@ export function businessFactory(repository){
             return insertedId;
         },
 
-   
-     
-     async updateBusiness(id, updateData){
+
+
+    async updateBusiness(id, updateData, userId){
         if(!id){
            return { status:400, success: false, message: 'Business Id is required' };
         }
@@ -37,15 +38,15 @@ export function businessFactory(repository){
             return { status:400, success: false, message: 'No update data provided' };
         }
 
-        const result = await repository.updateBusinessRepository(id, updateData);
-     
-
-        if(result.matchedCount === 0){
-            return { status:400, success: false, message: 'Business not found' };
+        const check = await getOwnershipBusiness(repository, id, userId);
+        if(check.error){
+             return { status:check.status, success: false, message:check.message};
         }
-
-        if(result.modifiedCount === 0){
-             return { status:400, success: false, message: 'Business update failed' };
+      
+        const result = await repository.updateBusinessRepository(id, updateData);
+    
+        if(result.matchedCount > 0 && result.modifiedCount === 0){
+             return { status:400, success: false, message: 'Business is already updated' };
         }
 
         return {status:200, success: true, data: id};
@@ -54,19 +55,26 @@ export function businessFactory(repository){
 
 
 
-    async deleteBusiness(id){
+    async deleteBusiness(id, userId){
         if(!id){
            return { status:400, success: false, message: "Business id is required" };
         }
 
-        const result = await repository.deleteBusinessRepository(id);
+         const check = await getOwnershipBusiness(repository, id, userId);
+
+        if(check.error){
+             return { status:check.status, success: false, message:check.message};
+        }
+       
+        const result = await repository.deleteBusinessRepository(id , userId);
 
         if(result.deletedCount == 0){
             return {status:400, success: false, message: "No business found"};
         }
 
         return {status:200,  success: true , data: id };
-    },    
+    },
+
 
 
      async getBusinessByUser(userId){
@@ -79,4 +87,9 @@ export function businessFactory(repository){
     }
 
 
- }}
+     
+
+}
+}
+
+

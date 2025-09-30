@@ -12,6 +12,8 @@ export async function runBookSlotMigration(db){
                 email : {bsonType : "string", pattern: "^[\\w.-]+@([\\w-]+\\.)+[\\w-]{2,4}$", description: "Email field " },
                 phone : {bsonType : "string", pattern : "^[0-9]{10}$"},
                 appointment_slot_id : {bsonType : "objectId" , description: "Booking time"},
+                booking_reference : {bsonType: "string", description: "Unique booking reference"},
+                rescheduled_count : {bsonType : "int" , description: "Number of times the booking has rescheduled"},
                 created_at : {bsonType: "date"},
                 updated_at : {bsonType : "date"}
             }

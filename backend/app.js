@@ -6,8 +6,11 @@ import authRouter from './src/shared/routes/authRoute.js';
 import businessRouter from './src/shared/routes/businessRoute.js';
 import customerRouter from './src/shared/routes/customerRoutes.js'
 import errorHandler from './src/shared/middlewares/errorHandlingMiddleware.js';
-import { slotIndex, creatingBookingSlotIndex } from './src/features/slot/slotIndex.js';
+import { slotIndex } from './src/features/slot/slotIndex.js';
+import { bookingIndex } from './src/features/bookSlot/bookingIndex.js';
 dotenv.config();
+
+
 
 const app = express();
 app.use(express.json()); // parse JSON bodies
@@ -27,7 +30,7 @@ if (process.env.NODE_ENV === 'development') {
     .then(async (db) => {
       console.log('MongoDB connected')
       await slotIndex(db);
-      // await creatingBookingSlotIndex(db);
+      await bookingIndex(db);
     })
     .catch(err => console.error('MongoDB connection failed:', err));
 }

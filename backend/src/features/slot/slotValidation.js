@@ -26,7 +26,8 @@ export const createSlotValidation = [
     .notEmpty()
     .withMessage('business service duration is required')
     .isInt({min : 1})
-    .withMessage("service duration must be at least 1 minute"),
+    .withMessage("service duration must be at least 1 minute")
+    .toInt(),
 
     body("date")
     .notEmpty()
@@ -40,4 +41,5 @@ export const createSlotValidation = [
     .withMessage("seats is required")
     .isInt({min: 1})
     .withMessage('Seats must be at least 1')
+    .toInt()
 ]

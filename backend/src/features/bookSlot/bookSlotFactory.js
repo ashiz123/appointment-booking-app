@@ -2,6 +2,7 @@
 
 import { ObjectId } from "mongodb";
 import { buildBooking } from "./bookingSlotModel.js";
+import { sendAppointmentEmail } from "../../shared/config/mailer.js"; 
 
 
 
@@ -13,48 +14,89 @@ export function bookSlotFactory(bookRepo, slotRepo){
 
             async bookSlot({appointment_slot_id, fullname, email, phone}){
           
-
-             const slot_id = new ObjectId(appointment_slot_id);
-             const slotBooked = await bookRepo.slotAlreadyBooked(slot_id, email);
              let result;
-             
-             if (slotBooked) {
-                return { success: false, status: 400, message: "Booking already exists for this user" };
-             }
+             let bookedSeat;
+             const slot_id = new ObjectId(appointment_slot_id);
+             const isValidDateToBook = await slotRepo.isDateValid(slot_id);     //check the valid date to book. Is it greater than current date and time
 
-             try{
-                const bookingResult = await bookRepo.bookingSlot(
+
+            if(!isValidDateToBook){
+                return {success: false, status: 400, message: "Date must be greater than current date and time"};
+            }
+
+         try{
+
+               bookedSeat = await slotRepo.bookingSeat(slot_id); 
+              
+               if(bookedSeat.acknowledged && bookedSeat.modifiedCount > 0){
+                  const bookingResult = await bookRepo.bookingSlot(
                        buildBooking(slot_id, fullname, email, phone)
                  );
-
-                 if(!bookingResult.acknowledged){
-                    throw new Error("Booking could not be created").status
-                 }
-
-                 const updateBookResult = await slotRepo.updateBookedSeats(slot_id);
-
-
-                if(updateBookResult.acknowledged && updateBookResult.modifiedCount > 0){
-                    result = {success:true, status:200, message : "Slot booked successfully"}
-                }
-                else
-                {
-                   await bookRepo.cancleBookedSlot(bookingResult.insertedId);
-                   result = {success : false,  status: 400, message: "Problem occured with appointment_slot update"};
-                }
+                 
+                 await sendAppointmentEmail(email, fullname, bookingResult.slot_start, bookingResult.booking_reference, text);
+                 result = {success:true, status:200, message : "Slot booked successfully"};
+               }else{
+                  throw new Error("Issue with the appointment slot booking");
+               }
 
                 return result;
             }
              catch(err){
-                if(bookingResult?.insertedId){
-                    bookRepo.cancleBookedSlot(bookingResult.insertedId);
+               if(bookedSeat.acknowledged && bookedSeat.modifiedCount > 0){
+                    const canceled = await slotRepo.unbookingSeat(slot_id);
+                    if(canceled.modifiedCount === 1 ){
+                     console.log("Unbook the appointment slot collection, Rolling back");
+                    }
                 }
-                throw new Error(`Error occured : ${err.message}`);
+
+                return {success: false, status:409, message : err.message}
              }
             },
                    
                 
-                 
+         
+            async rescheduleAppointment(booking_reference, appointment_slot_id){
+
+             const slot_id = new ObjectId(appointment_slot_id);
+             const isValidDateToBook = await slotRepo.isDateValid(slot_id);     //check the valid date to book. Is it greater than current date and time
+
+
+            if(!isValidDateToBook){
+                return {success: false, status: 400, message: "Date must be greater than current date and time"};
+            }
+
+             try{
+                const previousBooking = await bookRepo.fetchBookingDetail(booking_reference);
+
+                await slotRepo.unbookingSeat(previousBooking.appointment_slot_id);
+                console.log('unbooked previous slot');
+
+                await slotRepo.bookingSeat(slot_id);
+                console.log('booking another appointment slot successful');
+
+                const reschedule = await bookRepo.rescheduleBooking(booking_reference, slot_id);
+                
+                 if(!reschedule){
+                    await slotRepo.unbookingSeat(slot_id);
+                    await slotRepo.bookingSeat(previousBooking.appointment_slot_id);
+                    throw new Error("Booking could not be created");
+                 }
+
+                const text = "Your appointment is rescheduled ";
+                await sendAppointmentEmail(reschedule.email, reschedule.fullname, reschedule.slot_start, reschedule.booking_reference, text);
+                return {success: true, status : 200, message : "Rescheduled successfully done"}
+             }
+             catch(err){
+                return {success: false, status:409, message : err.message} 
+             }
+
+            }, 
+
+
+
+
+
+
 
         async cancleSlot(){
 

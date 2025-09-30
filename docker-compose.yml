@@ -4,7 +4,7 @@ services:
 
   mongodb:
     container_name: mongodb
-    image: mongo
+    image: mongo 
     restart: always
     ports:
       - "27017:27017"
@@ -20,8 +20,12 @@ services:
     depends_on:
       - mongodb
     volumes:
-      - ./backend:/app                # Sync your local code with the container
-      - /app/node_modules    
+      - ./backend:/app        # Sync your local code with the container
+      - /app/node_modules  
+    env_file:
+     - ./backend/.env
+    environment:              #Docker environment
+      - DOCKER=true
 
 
   frontend:

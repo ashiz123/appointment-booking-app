@@ -21,6 +21,8 @@ export function BusinessOfferFactory(repository){
                 created_at : new Date(),
                 updated_at : new Date()
             }
+
+            
             const businessOfferId = await repository.create(offerData);
             return {
             status: 200,    

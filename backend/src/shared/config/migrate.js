@@ -11,8 +11,8 @@ async function migrate(){
         // await runCreateUserSchema(db);
         // await runBusinessMigration(db);
         // await runBusinessOfferSchema(db);
-        // await runSlotMigration(db);
-        await runBookSlotMigration(db);
+        await runSlotMigration(db);
+        // await runBookSlotMigration(db);
         
         console.log('Migration completed');
     }

@@ -6,12 +6,12 @@ export async function runSlotMigration(db){
                     bsonType : "object",
                     title : "Appointment slot validation",
                     required : [ "business_id", "service_id" , "slot_start" , "slot_end", "booked" , "total_seats"],
-                    properties : { business_id: { bsonType : "number", description : "business ID" , minimum: 1},
-                                   service_id : {bsonType : "number",description : "service Id", minimum:1},
+                    properties : { business_id: { bsonType : "objectId", description : "business ID must be object id" , },
+                                   service_id : {bsonType : "objectId",description : "service Id must be object id", },
                                    slot_start : { bsonType : "date", description : "business start time "},
                                    slot_end : { bsonType : "date", description : "business end time" },
-                                   booked : { bsonType : "number", minimum : 0, description : "duration of service in minute" },
-                                   total_seats : { bsonType : "number", minimum : 1, description : "number of seats, must be >=1 " }
+                                   booked : { bsonType : "int", minimum : 0, description : "duration of service in minute" },
+                                   total_seats : { bsonType : "int", minimum : 1, description : "number of seats, must be >=1 " }
                      } 
                 }   
 

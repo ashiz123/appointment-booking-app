@@ -6,26 +6,27 @@ import { createBusinessValidation } from '../../features/business/businessValida
 import { createBusinessOfferValidation } from '../../features/businessOffer/businessOfferValidation.js';
 import { validateRequest } from '../middlewares/validationRequest.js';
 import { createBusiness, deleteBusiness, updateBusiness, getBusinessByUser } from '../../features/business/businessController.js';
-import { createBusinessOffer} from '../../features/businessOffer/businessOfferController.js';
-import { isValidateDate } from '../middlewares/isValidateDate.js';
+import { createBusinessOffer, getBusinessOffer} from '../../features/businessOffer/businessOfferController.js';
 import { createSlot, getSlotsByDate } from '../../features/slot/slotController.js';
 
 
 
 //Business
 router.post('/create', createBusinessValidation, validateRequest, authenticate, createBusiness);
-router.delete('/delete/:id', deleteBusiness);
-router.put('/update/:id', updateBusiness);
-router.get('/byAuthUser', authenticate, getBusinessByUser);
+router.delete('/delete/:id', authenticate,  deleteBusiness);
+router.put('/update/:id',authenticate, updateBusiness);
+router.get('/byAuth', authenticate, getBusinessByUser);
+router.get('/offers', authenticate, getBusinessOffer);
 
 
-router.post('/service/create', createBusinessOfferValidation, validateRequest, authenticate, createBusinessOffer);
+router.post('/offer/create', createBusinessOfferValidation, validateRequest, authenticate, createBusinessOffer);
 //Generate appointment slot
 router.post('/appointment_slot/create' ,
     createSlotValidation,
     validateRequest,
+    authenticate,
     createSlot
-    );
+   );
 
 
 
