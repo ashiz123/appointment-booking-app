@@ -14,77 +14,19 @@ This project was created as a learning exercise to:
 -- Frontend/
 -- Backend/ (Featured approach)
 backend
-├── .devcontainer
-├── .dockerignore
-├── .env
-├── .gitignore
-├── .idea
-├── .vscode
-├── Dockerfile
-├── Dockerfile.test
-├── app.js
-├── bin
-│   └── www
-├── coverage
-├── docs
-│   └── logger.md
-├── jest.config.js
-├── logs
-├── node_modules
-├── package-lock.json
-├── package.json
-├── public
-│   ├── images
-│   ├── js
-│   └── styles
-├── server.js
+
 ├── src
 │   ├── features
-│   │   
 │   │   ├── business
-│   │   │   ├── buinessService.js
-│   │   │   ├── businessController.js
-│   │   │   ├── businessFactory.js.  
-│   │   │   ├── businessRepository.js. 
-│   │   │   └── businessSchema.js
 │   │   ├── businessOffer
-│   │   │   ├── businessOfferController.js
-│   │   │   ├── businessOfferFactory.js
-│   │   │   ├── businessOfferRepository.js
-│   │   │   └── businessOfferService.js
 │   │   ├── slot
-│   │   │   ├── slotController.js
-│   │   │   ├── slotFactory.js
-│   │   │   ├── slotRepository.js
-│   │   │   ├── slotSchema.js
-│   │   │   ├── slotService.js
-│   │   │   └── slotValidation.js
 │   │   └── user
-│   │       ├── userController.js
-│   │       ├── userFactory.js
-│   │       ├── userRepository.js
-│   │       ├── userSchema.js
-│   │       └── userServices.js
 │   └── shared
 │       ├── config
-│       │   ├── db.js
-│       │   └── migrate.js
 │       ├── middlewares
-│       │   ├── authMiddleware.js
-│       │   ├── errorHandlingMiddleware.js
-│       │   └── validationRequest.js
 │       ├── routes
-│       │   ├── appointmentRoute.js
-│       │   ├── authRoute.js
-│       │   └── buinessRoute.js
 │       ├── services
-│       │   └── jwtServices.js
 │       └── utils
-│           ├── createUpdateSchema.js
-│           ├── dateTimeCovert.js
-│           ├── errorHandler.js
-│           ├── logger.js
-│           └── responseHandler.js
 ├── testDebug.js
 └── tests
     └── authMiddleware.test.js
@@ -117,29 +59,29 @@ Auth: **Bearer Token (JWT)** for protected routes
 
 ## 🏢 Business APIs - /business
 
-            | Method | Endpoint                   | Description                          |
-            |--------|-----------------------------|--------------------------------------|
-            | POST   | `/create`          | Create a new business (auth required) |
-            | PUT    | `/update/:id`      | Update business by ID (owner only)   |
-            | GET    | `/byAuthUser`      | Get business owned by auth user      |
-            | DELETE | `/delete/:id`      | Delete business by ID (owner only)   |
+      | Method | Endpoint                   | Description                          |
+      |--------|-----------------------------|--------------------------------------|
+      | POST   | `/create`          | Create a new business (auth required) |
+      | PUT    | `/update/:id`      | Update business by ID (owner only)   |
+      | GET    | `/byAuthUser`      | Get business owned by auth user      |
+      | DELETE | `/delete/:id`      | Delete business by ID (owner only)   |
 
-            ---
+      ---
 
-            ## 💇 Services APIs
+      ## 💇 Services APIs
 
-            | Method | Endpoint                   | Description               |
-            |--------|-----------------------------|---------------------------|
-            | POST   | `/service/create` | Create a new service under a business |
+      | Method | Endpoint                   | Description               |
+      |--------|-----------------------------|---------------------------|
+      | POST   | `/service/create` | Create a new service under a business |
 
-            ---
+      ---
 
-            ## 📅 Appointment Slot APIs
+      ## 📅 Appointment Slot APIs
 
-            | Method | Endpoint                        | Description              |
-            |--------|--------------------------------|--------------------------|
-            | GET    | `/appointment-slot`            | Get all available slots  |
-            | POST   | `/customer/book_appointment`   | Book an appointment slot |
+      | Method | Endpoint                        | Description              |
+      |--------|--------------------------------|--------------------------|
+      | GET    | `/appointment-slot`            | Get all available slots  |
+      | POST   | `/customer/book_appointment`   | Book an appointment slot |
 
             ---
 
@@ -150,6 +92,7 @@ Auth: **Bearer Token (JWT)** for protected routes
 | GET    | `/book_slot`   | Get booked slots    |
 | POST   | `/book_appointment` | Book appointment |
 | POST   | `/appointment_slot/by_date` | Get appointments by date 
+| POST   | `/reschedule_appointment`   | Reschedule appointment 
 ---
 
 ### ⚠️ Notes
