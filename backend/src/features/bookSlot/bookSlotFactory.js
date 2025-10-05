@@ -2,7 +2,7 @@
 
 import { ObjectId } from "mongodb";
 import { buildBooking } from "./bookingSlotModel.js";
-import { sendAppointmentEmail } from "../../shared/config/mailer.js"; 
+import {sendAppointmentEmail, sendAppointmentCancelEmail } from "../../shared/config/mailer.js"; 
 
 
 
@@ -12,7 +12,7 @@ export function bookSlotFactory(bookRepo, slotRepo){
     return {
 
 
-            async bookSlot({appointment_slot_id, fullname, email, phone}){
+            async bookSlot({appointment_slot_id, fullname, email, phone, status}){
           
              let result;
              let bookedSeat;
@@ -27,13 +27,13 @@ export function bookSlotFactory(bookRepo, slotRepo){
          try{
 
                bookedSeat = await slotRepo.bookingSeat(slot_id); 
-              
+               
                if(bookedSeat.acknowledged && bookedSeat.modifiedCount > 0){
                   const bookingResult = await bookRepo.bookingSlot(
-                       buildBooking(slot_id, fullname, email, phone)
+                       buildBooking(slot_id, fullname, email, phone, status)
                  );
                  
-                 await sendAppointmentEmail(email, fullname, bookingResult.slot_start, bookingResult.booking_reference, text);
+                 await sendAppointmentEmail(email, fullname, bookingResult.slot_start, bookingResult.booking_reference);
                  result = {success:true, status:200, message : "Slot booked successfully"};
                }else{
                   throw new Error("Issue with the appointment slot booking");
@@ -52,6 +52,10 @@ export function bookSlotFactory(bookRepo, slotRepo){
                 return {success: false, status:409, message : err.message}
              }
             },
+
+
+
+
                    
                 
          
@@ -98,8 +102,44 @@ export function bookSlotFactory(bookRepo, slotRepo){
 
 
 
-        async cancleSlot(){
+        async cancelAppointment(email, booking_reference){
+         try{
+            if(!email){
+               throw new Error("Email is required");
+            }
 
+            const cancelAppointment = await bookRepo.cancleBookedSlot(email, booking_reference);
+            console.log(cancelAppointment);
+
+
+            if(cancelAppointment.matchedCount === 0 || cancelAppointment.modifiedCount === 0){
+               throw new Error("Appointment not found to cancel or already cancelled")
+            }
+
+            const text = "Your appointment is cancelled ";
+            await sendAppointmentCancelEmail(email, booking_reference, text, new Date());
+            return {success: true, status : 200, message : "Appointment successfully cancelled"}
+         }
+         catch(err){
+            return {success: false, status:409, message : err.message} 
+         }
+
+        },
+
+
+        async getBookedAppointment(fromDate, toDate, authId){
+         try{  
+            if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
+               console.log('here it is')
+               throw new Error('From and To date are required and must be valid dates');
+            }
+
+         const bookedAppointment = await bookRepo.fetchBookingByDate(fromDate, toDate, authId);
+         return {success: true, status : 200, data:bookedAppointment}
+         }
+         catch(err){
+            throw err;
+         }
         }
 
     }

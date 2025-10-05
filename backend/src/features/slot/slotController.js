@@ -8,13 +8,7 @@ const logger = getLogger();
 export async function createSlot(req, res, next){
 
     //validation - express-validator in route
-
-  
     const {business_id , service_id, business_start, business_end, service_duration, date, seats} = req.body;
-
-
-
-   
     const authId = req.user.id;
     const slots = [];
     const start = timeToMinute(business_start);
@@ -72,14 +66,7 @@ export async function getSlotsByDate(req, res, next){
 }
 
 
-export async function bookSlot(req, res, next){
-    try{
 
-    }
-    catch{
-
-    }
-}
 
 
 

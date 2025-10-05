@@ -1,4 +1,5 @@
 import { bookSlotPipeline } from "./pipelines/bookingSlotPipeline.js";
+import { bookedAppointmentPipeline } from "./pipelines/bookedAppointmentPipeline.js";
 import { ObjectId } from "mongodb";
 
 export class BookSlotRepository {
@@ -24,12 +25,13 @@ export class BookSlotRepository {
    async bookingSlot(bookingDetail) {
       try {
         const result = await this.db.collection(this.collectionName).insertOne(bookingDetail);
+       
 
         if (!result.acknowledged) {
           throw new Error("Booking insert failed");
         }
        const matchFilter = {_id : new ObjectId(result.insertedId) };
-       return await this.fetchBookingById(matchFilter)
+       return await this.fetchBookingByFilter(matchFilter)
 
       } catch (err) {
         throw new Error(`Failed to book slot: ${err.message}`);
@@ -53,7 +55,7 @@ export class BookSlotRepository {
       }
 
       const matchFilter = { booking_reference : booking_reference};
-      return await this.fetchBookingById(matchFilter)
+      return await this.fetchBookingByFilter(matchFilter)
     
      }
      catch(error){
@@ -61,7 +63,9 @@ export class BookSlotRepository {
      }}
 
 
-    async fetchBookingById(matchFilter){
+
+
+    async fetchBookingByFilter(matchFilter){
        const pipeline = bookSlotPipeline(matchFilter);
         const response = await this.db.collection(this.collectionName).aggregate(pipeline).toArray();
 
@@ -74,13 +78,13 @@ export class BookSlotRepository {
 
 
 
-   async cancleBookedSlot(bookingId){
+   async cancleBookedSlot(email, booking_reference){
        try{
-        const result = await this.db.collection(this.collectionName).deleteOne({_id: bookingId});
-        console.log('Booked appointment successfully canceled');
+        const result = await this.db.collection(this.collectionName).updateOne({email , booking_reference, status : {$ne : "cancelled"}}, {$set : {status : "cancelled", updated_at : new Date()}});
         return result;
-       }catch(err){
-         throw new Error('Error occured while deleting the record');
+      }catch(err){
+        console.log("errir sdf", err);
+         throw new Error('Error occured while deleting the record' );
        }
     }
 
@@ -97,6 +101,21 @@ export class BookSlotRepository {
       } 
     }
 
+
+    
+
+    async fetchBookingByDate(fromDate, toDate, authId){
+      try{
+        const ownerId = new ObjectId(authId);
+        const pipeline = bookedAppointmentPipeline(fromDate, toDate, ownerId);
+        const bookings = await this.db.collection(this.collectionName).aggregate(pipeline).toArray();
+        return bookings;
+       
+      }catch(err){
+         throw err;
+      }
+    }
+ 
 
    
 

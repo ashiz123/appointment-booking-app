@@ -39,6 +39,8 @@ export function slotFactory(slotRepository, businessRepo, businessOfferRepo){
       return slot;
     },
 
+    
+
     async deleteSlot(){
       
     }
