@@ -1,5 +1,5 @@
 
-import { getDb } from "../../shared/config/db.js";
+
 import { ObjectId } from "mongodb";
 
 
@@ -7,7 +7,7 @@ export class BusinessOfferRepository{
 
 constructor(db){
     this.db = db;
-     this.collectionName = 'business_offer';
+    this.collectionName = 'business_offer';
   }
 
 
@@ -36,13 +36,7 @@ constructor(db){
 
 
 
-    async getById(id){
-
-    }
-
-    async update(id, updates){
-
-    }
+   
 
 }
 

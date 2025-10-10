@@ -15,8 +15,6 @@ try {
 
 
 
-export async function getBusinessOffer(req, res, next){
 
-}
 
 

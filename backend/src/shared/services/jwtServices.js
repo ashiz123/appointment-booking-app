@@ -12,7 +12,7 @@ export const jwtService = {
         try{
             return jwt.verify(token, SECRET_KEY);
         }catch(err){
-            return null;
+            return 'Error found in jwts verify:' , err.message;
         }
     },
     

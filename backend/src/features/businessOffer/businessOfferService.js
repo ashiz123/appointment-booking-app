@@ -1,8 +1,10 @@
 import { BusinessOfferFactory } from "./businessOfferFactory.js";
 import { BusinessOfferRepository } from "./businessOfferRepository.js";
+import { getDb } from "../../shared/config/db.js";
 
 
 export async function createBusinessOfferService() {
-  const repo = await new BusinessOfferRepository().init(); 
+  const db = new getDb();
+  const repo = new BusinessOfferRepository(db); 
   return BusinessOfferFactory(repo);
 }

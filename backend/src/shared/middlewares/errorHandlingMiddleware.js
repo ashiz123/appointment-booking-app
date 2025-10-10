@@ -1,4 +1,4 @@
-export default function errorHandler(err, req, res , next){
+export default function errorHandler(err, _req, res , _next){
   
     const status = err.status || 500;
     const message = 

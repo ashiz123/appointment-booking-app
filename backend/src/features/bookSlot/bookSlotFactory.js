@@ -138,8 +138,9 @@ export function bookSlotFactory(bookRepo, slotRepo){
          return {success: true, status : 200, data:bookedAppointment}
          }
          catch(err){
-            throw err;
+            return {success: false, status:409, message : err.message} 
          }
+         
         }
 
     }
@@ -150,34 +151,3 @@ export function bookSlotFactory(bookRepo, slotRepo){
 
 
 
-// import { getDb, getClient } from "../../shared/config/db.js";
-
-// export async function bookSlotService() {
-//   const db = await getDb();
-//   const client = getClient(); // 👈 here’s the MongoClient instance
-
-//   const session = client.startSession();
-
-//   try {
-//     await session.withTransaction(async () => {
-//       // Example insert
-//       await db.collection("bookings").insertOne(
-//         { email: "test@test.com" },
-//         { session }
-//       );
-
-//       // Example update
-//       await db.collection("appointment_slots").updateOne(
-//         { _id: new ObjectId("68bf0230b4ca5ce97eb3a86b"), booked: { $lt: 10 } },
-//         { $inc: { booked: 1 } },
-//         { session }
-//       );
-//     });
-
-//     return { success: true };
-//   } catch (err) {
-//     throw new Error(`Transaction failed: ${err.message}`);
-//   } finally {
-//     await session.endSession();
-//   }
-// }
