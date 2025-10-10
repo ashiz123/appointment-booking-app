@@ -5,7 +5,7 @@ export function BusinessOfferFactory(repository){
 
 
     return{
-        async addService({name, description, price,duration, businessId, category}){
+        async addService({name, description, price,duration, businessId}){
             if (!name) throw new Error("Name is required");
             if (price == null) throw new Error("Price is required");
             if(!duration) throw new Error("Duration is required");
@@ -17,7 +17,6 @@ export function BusinessOfferFactory(repository){
                 businessId: new ObjectId(businessId),
                 price : price,
                 duration: duration,
-                // category : category ?? null,
                 created_at : new Date(),
                 updated_at : new Date()
             }
@@ -31,18 +30,6 @@ export function BusinessOfferFactory(repository){
            };
         },
 
-        async updateService(id, updates){
-
-        },
-
-
-        async deleteService(id){
-
-        },
-
-        async getServiceById(id){
-
-        }
 
 
     }

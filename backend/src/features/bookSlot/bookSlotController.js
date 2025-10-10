@@ -1,5 +1,4 @@
 import { bookSlotService } from "./bookSlotService.js";
-import { handleError } from "../../shared/utils/errorHandler.js";
 import { responseHandler } from "../../shared/utils/responseHandler.js";
 
 //middleware validaion done
@@ -11,10 +10,11 @@ export async function bookingController(req, res, next){
     return responseHandler(res, result);
   }
   catch(err){
-  return res.status(400).json({
-        source: err.source,  // <-- use the property you set
-        message: err.message
-      });
+  // return res.status(400).json({
+  //       source: err.source,  // <-- use the property you set
+  //       message: err.message
+  //     });
+  next(err);
     
   }
 }
@@ -29,10 +29,7 @@ export async function rescheduleController(req, res, next){
     return responseHandler(res, result);
   }
   catch(err){
-    return res.status(400).json({
-        source: err.source,  
-        message: err.message
-      });
+    next(err);
   }
 
 }
@@ -43,14 +40,11 @@ export async function cancelController(req, res , next){
      const {email} = req.params;
      const {booking_reference} = req.body;
      const service = await bookSlotService();
-     const result = await service.cancelAppointment(email, booking_reference);
+     const result = await service.cancelAppointmen(email, booking_reference);
      return responseHandler(res, result);
   }
   catch(err){
-    return res.status(400).json({
-        source: err.source,  
-        message: err.message
-      });
+    next(err);
   }
 }
 
@@ -63,13 +57,9 @@ export async function showBookedAppointment(req, res, next){
   const service = await bookSlotService();
   const authId =  req.user.id;
   const result = await service.getBookedAppointment(fromDate, toDate, authId);
-  return res.status(result.status).json(result.data);
+  return responseHandler(res, result);
   }
   catch(err){
-    console.log('err is', err.message);
-    return res.status(400).json({
-        source: err.source,  
-        message: err.message
-      });
+    next(err)
   }
 }

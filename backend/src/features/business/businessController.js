@@ -1,23 +1,21 @@
 import { businessService } from "./buinessService.js";
 import { handleError } from "../../shared/utils/errorHandler.js";
 import { responseHandler } from "../../shared/utils/responseHandler.js";
-import { BusinessRepository } from "./businessRepository.js";
+
 
 
 export async function createBusiness(req, res, next){
 try{
          const userId = req.user.id
          const service = await businessService();
-         const result = await service.createBuisness(req.body, userId);
+         const result = await service.createBuisnes(req.body, userId);
          return res.status(201).json({
             message : "Business created successfully",
             business_id : result
          });
     }
     catch(err){
-        console.log(err);
-        return handleError(res, err);
-        //  next(err)
+       next(err)
     }
    
 
@@ -62,6 +60,7 @@ export async function getBusinessByUser(req, res){
     try{
           
          const service = await businessService();
+         const authId = await req.user.id;
          const result = await service.getBusinessByUser(authId);
          console.log(result);
          return responseHandler(res, result);
@@ -70,6 +69,6 @@ export async function getBusinessByUser(req, res){
         return handleError(res,err);
     }
 }
-
+``
 
 

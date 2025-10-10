@@ -5,7 +5,7 @@ const logger = getLogger();
 
 
 
-export async function createSlot(req, res, next){
+export async function createSlot(req, res, _next){
 
     //validation - express-validator in route
     const {business_id , service_id, business_start, business_end, service_duration, date, seats} = req.body;
@@ -48,7 +48,7 @@ export async function createSlot(req, res, next){
  }
 
 
-export async function getSlotsByDate(req, res, next){
+export async function getSlotsByDate(req, res, _next){
   try{
     const filterDay = new Date(req.body.date);       
     const tomorrow = new Date(filterDay);        

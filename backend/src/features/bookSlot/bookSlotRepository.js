@@ -42,7 +42,7 @@ export class BookSlotRepository {
   async rescheduleBooking(booking_reference, slot_id){
      try{
        const result = await this.db.collection(this.collectionName).updateOne({
-        booking_reference},  {$set : {appointment_slot_id : slot_id } , $inc : {rescheduled_count : 1}});
+        booking_reference},  {$set : {appointment_slot_id : slot_id, status : "rescheduled", updated_at: new Date() } , $inc : {rescheduled_count : 1 }});
 
         console.log("result reschedule", result);
 
@@ -112,7 +112,7 @@ export class BookSlotRepository {
         return bookings;
        
       }catch(err){
-         throw err;
+         throw new Error(`Issue found, Cannot fetch data by date, ${err.message}`);
       }
     }
  

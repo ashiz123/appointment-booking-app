@@ -8,10 +8,10 @@ import { runBusinessOfferSchema } from "../../features/businessOffer/businessOff
 async function migrate(){
     try{
         const db = await connect();
-        // await runCreateUserSchema(db);
-        // await runBusinessMigration(db);
-        // await runBusinessOfferSchema(db);
-        // await runSlotMigration(db);
+        await runCreateUserSchema(db);
+        await runBusinessMigration(db);
+        await runBusinessOfferSchema(db);
+        await runSlotMigration(db);
         await runBookSlotMigration(db);
         
         console.log('Migration completed');

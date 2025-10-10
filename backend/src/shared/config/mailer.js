@@ -28,7 +28,7 @@ export async function sendAppointmentEmail(to, name, dateTime, booking_reference
     });
     console.log("Email sent successfully to Mailtrap sandbox!");
   } catch (err) {
-    console.error("Error sending email:", err);
+    console.error("Error sending email:", err.message);
   }
 }
 
@@ -48,6 +48,6 @@ export async function sendAppointmentCancelEmail(to, booking_reference, text, da
     console.log('Cancel mail sent successfully');
   }
   catch(err){
-    console.error('Error Canceling the appointment');
+    console.error('Error Canceling the appointment:', err.message);
   }
 }
