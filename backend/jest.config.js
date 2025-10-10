@@ -1,13 +1,9 @@
 export default {
   testEnvironment: "node",
-  transform: {},                   
+  transform: {},
   moduleFileExtensions: ["js", "json", "node"],
-  // setupFilesAfterEnv: ["<rootDir>/tests/setup.js"],
-
+  setupFiles: ["<rootDir>/tests/jest-dotenv.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup.js"]
 };
 
 
-
-//   transform: {
-//     "^.+\\.js$": "babel-jest"
-//   },
