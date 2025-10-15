@@ -1,4 +1,4 @@
-import './setup.js';
+import '../setup/setup.js';
 
 // Test suite for user operations
 describe('User operations', () => {
@@ -33,4 +33,8 @@ describe('User operations', () => {
         expect(insertedUser.username).toBe('Jane Doe');
         expect(insertedUser.email).toBe('jane@gmail.com');
     });
-});
+
+
+    
+
+})

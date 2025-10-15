@@ -13,7 +13,7 @@ export default defineConfig([
       
     },
     {
-      files : ["**/*.test.{js, mjs, cjs}", "tests/setup.js"],
+      files : ["**/*.test.{js, mjs, cjs}", "tests/setup/setup.js"],
       languageOptions : {
         globals : {...globals.jest}
       }
