@@ -1,4 +1,4 @@
-import {connect, closeConnection, getDb} from '../src/shared/config/db.js';
+import {connect, closeConnection, getDb} from '../../src/shared/config/db.js';
 
 
 
@@ -18,6 +18,11 @@ beforeAll(async () => {
         throw err;
     }
 });
+
+beforeEach(async() => {
+  await global.db.collection("business").deleteMany({});
+ 
+})
 
 
 

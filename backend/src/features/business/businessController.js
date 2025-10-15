@@ -8,14 +8,14 @@ export async function createBusiness(req, res, next){
 try{
          const userId = req.user.id
          const service = await businessService();
-         const result = await service.createBuisnes(req.body, userId);
+         const result = await service.createBuisness(req.body, userId);
          return res.status(201).json({
             message : "Business created successfully",
             business_id : result
          });
     }
     catch(err){
-       next(err)
+       next(err)    
     }
    
 

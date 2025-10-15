@@ -1,6 +1,6 @@
 
 
-import { getSlotsByDatePipeline } from "../src/features/slot/pipelines/slotPipeline";
+import { getSlotsByDatePipeline } from "../../src/features/slot/pipelines/slotPipeline";
 
 describe('Slot Pipelines', () => {
     test('getSlotsByDatePipeline returns correct stages', () => {

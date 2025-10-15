@@ -2,6 +2,15 @@ import { jwtService } from "../services/jwtServices.js";
 
 
 export function authenticate(req, res, next){
+
+
+ if (process.env.NODE_ENV === 'test') {
+    console.log('its coming in test environment authenticate');
+    req.user = { id: '68e699a649500a709aa9b8c3' , username : 'testing', email : "testing@gmail.com"};
+    return next();
+  }
+
+
   const authHeader = req.headers['authorization'];
   if(!authHeader) return res.status(401).json({message : 'No token provided'});
 
