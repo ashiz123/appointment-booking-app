@@ -49,51 +49,73 @@ Auth: **Bearer Token (JWT)** for protected routes
 
 ## 🔑 Auth APIs - /users
 
-| Method | Endpoint          | Description         |
-|--------|-------------------|---------------------|
-| POST   | `/register` | Register a new user |
-| POST   | `/login`    | Login and get token |
-| POST   | `/logout`   | Logout user         |
-
----
+  | Method | Endpoint          | Description         |
+  |--------|-------------------|---------------------|
+  | POST   | `/register` | Register a new user |
+  | POST   | `/login`    | Login and get token |
+  | POST   | `/logout`   | Logout user         |
+  ---
 
 ## 🏢 Business APIs - /business
 
-      | Method | Endpoint                   | Description                          |
-      |--------|-----------------------------|--------------------------------------|
-      | POST   | `/create`          | Create a new business (auth required) |
-      | PUT    | `/update/:id`      | Update business by ID (owner only)   |
-      | GET    | `/byAuthUser`      | Get business owned by auth user      |
-      | DELETE | `/delete/:id`      | Delete business by ID (owner only)   |
+  | Method | Endpoint                   | Description                          |
+  |--------|-----------------------------|--------------------------------------|
+  | POST   | `/create`          | Create a new business (auth required) |
+  | PUT    | `/update/:id`      | Update business by ID (owner only)   |
+  | GET    | `/byAuthUser`      | Get business owned by auth user      |
+  | DELETE | `/delete/:id`      | Delete business by ID (owner only)   |
 
-      ---
+  ---
 
-      ## 💇 Services APIs
+  ## 💇 Services APIs
 
-      | Method | Endpoint                   | Description               |
-      |--------|-----------------------------|---------------------------|
-      | POST   | `/service/create` | Create a new service under a business |
+  | Method | Endpoint                   | Description               |
+  |--------|-----------------------------|---------------------------|
+  | POST   | `/service/create` | Create a new service under a business |
 
-      ---
+  ---
 
-      ## 📅 Appointment Slot APIs
+  ## 📅 Appointment Slot APIs
 
-      | Method | Endpoint                        | Description              |
-      |--------|--------------------------------|--------------------------|
-      | GET    | `/appointment-slot`            | Get all available slots  |
-      | POST   | `/customer/book_appointment`   | Book an appointment slot |
+  | Method | Endpoint                        | Description              |
+  |--------|--------------------------------|--------------------------|
+  | GET    | `/appointment-slot`            | Get all available slots  |
+  | POST   | `/customer/book_appointment`   | Book an appointment slot |
 
             ---
 
 ## 👤 Customer APIs - /customer
 
-| Method | Endpoint                | Description         |
-|--------|--------------------------|---------------------|
-| GET    | `/book_slot`   | Get booked slots    |
-| POST   | `/book_appointment` | Book appointment |
-| POST   | `/appointment_slot/by_date` | Get appointments by date 
-| POST   | `/reschedule_appointment`   | Reschedule appointment 
----
+  | Method | Endpoint                | Description         |
+  |--------|--------------------------|---------------------|
+  | GET    | `/book_slot`   | Get booked slots    |
+  | POST   | `/book_appointment` | Book appointment |
+  | POST   | `/appointment_slot/by_date` | Get appointments by date 
+  | POST   | `/reschedule_appointment`   | Reschedule appointment 
+  ---
+
+### Testing
+This project is using using jest and supertest
+This project is using separate test env, test db to avoid affecting development
+Make sure you have .env.test 
+
+Run test - npm test
+
+
+
+## Testing environment configuration 
+# jest.config
+  testEnvironment: "node",
+  transform: {},
+  moduleFileExtensions: ["js", "json", "node"],
+  setupFiles: ["<rootDir>/tests/setup/jest-dotenv.setup.js"],
+  setupFilesAfterEnv: ["<rootDir>/tests/setup/setup.js"]
+
+
+# jest-dotenv.setup.js
+  dotenv.config({ path: ".env.test", override: true }); 
+  console.log("Loaded test environment:", process.env.NODE_ENV);
+
 
 ### ⚠️ Notes
 - All protected endpoints require:  
