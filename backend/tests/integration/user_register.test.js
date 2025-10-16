@@ -1,26 +1,27 @@
 import request from "supertest";
 import app from "../../app.js";
 import '../setup/setup.js';
-import { getDb } from "../../src/shared/config/db.js";
 
 
 
 
 
-describe("user" , () => {
+
+describe("User register" , () => {
 
 
     const body = {
-            "username": "pukar",
+            "username": "",
             "email": "pukar@gmail.com",
             "password": "123456"
         }
 
-   beforeEach(async() => {
-    const db = getDb();
-    await db.collection("users").deleteMany({});
-    })
 
+        beforeEach(async () => {
+        await global.db.collection('users').deleteMany({});
+        });
+
+ 
 
     it('should register the new user' , async() => {
        
@@ -28,8 +29,6 @@ describe("user" , () => {
          .post('/users/register' )
          .set('Accept', 'application/json')
          .send(body);
-
-        
 
          expect(res.statusCode).toBe(200);
          expect(res.body).toHaveProperty('message' , 'User registered succcessfully');
@@ -39,8 +38,8 @@ describe("user" , () => {
 
     it('should not allow duplicate email', async() => {
 
-        const db = getDb();
-        await db.collection('users').insertOne(body); //inserted here
+       
+        await global.db.collection('users').insertOne(body); //inserted here
         const res = await request(app)
          .post('/users/register' )
          .set('Accept', 'application/json')

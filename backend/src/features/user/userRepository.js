@@ -28,10 +28,11 @@ export class UserRepository {
 
 
     async  saveUser(user){
+        console.log('user in db', user);
     const result = await this.db.collection(this.collection).insertOne(user);
     const userId = result.insertedId;
     return userId;
-    }
+    }  
 
 
 
