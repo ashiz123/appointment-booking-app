@@ -43,7 +43,7 @@ export class BusinessRepository{
   async getBusinessByAuthUser(businessId , authId){
          const result = await this.db.collection(this.collectionName).findOne({
             _id : new ObjectId(businessId),
-            owner: new ObjectId(authId)
+            ownerId: new ObjectId(authId)
          });
 
          console.log('business', businessId, authId);

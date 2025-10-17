@@ -6,44 +6,58 @@ import '../setup/setup.js';
 
 describe('User login', () => {
 
-      const loginBody = {
+      const USER_CREDENTIALS = {
              "username": "pukar",
-              "password": "123456"
+             "password": "123456"
         }
 
-      const registerBody = {
-           "username": "pukar",
+      const REGISTER_USER = {
+            ...USER_CREDENTIALS,
             "email": "pukar@gmail.com",
-            "password": "123456"
+            
       }  
 
       beforeEach(async() => {
         await global.db.collection('users').deleteMany({});
         await request(app)
         .post('/users/register')
-        .set('Accept','application.json')
-        .send(registerBody);
+         .send(REGISTER_USER)
+         .expect(200)
       }); 
 
 
-    it('should login user', async() => {
+    it('should successfully login registered user', async() => {
         const res = await request(app)
         .post('/users/login')
         .set('Accept', 'application/json')
-        .send(loginBody);
+        .send(USER_CREDENTIALS);
 
-
-        console.log('Response from login test', res.body, res.statusCode);
         expect(res.statusCode).toBe(200);
-        expect(typeof res.body.user).toBe('object');
-        expect(res.body.user).toEqual({
-          username: 'pukar', email: 'pukar@gmail.com' 
-        });
-        //token validate check
-        expect(res.body).toHaveProperty('token');
-        expect(typeof res.body.token).toBe('string');
-        expect(res.body.token.length).toBeGreaterThan(10);
+        expect(res.body.message).toEqual('Login successful');
+        expect(res.body.data).toHaveProperty('token');
+        expect(res.body.data.token.length).toBeGreaterThan(10);
+      
+    });
+
+
+    it('should return wrong password ', async() => {
+      const WRONG_CREDENTIALS = {
+        "username" : "pukar",
+        "password" : "testingwrong"
+      }
+
+      const res = await request(app)
+        .post('/users/login')
+        .set('Accept', 'application/json')
+        .send(WRONG_CREDENTIALS);
+
+        expect(res.body.message).toEqual('Wrong password');
+        expect(res.statusCode).toEqual(401);
     })
+
+    
+
+
 })
 
 
@@ -60,7 +74,7 @@ describe('User login validation', () => {
         .set('Accept' ,'application/json')
         .send(loginBody)
 
-        console.log('login error', res.body, res.statusCode);
+       
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty('errors');
         expect(res.body.errors).toEqual(

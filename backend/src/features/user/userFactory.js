@@ -41,7 +41,7 @@ export function userFactory(repository){
             const isMatch = await bcrypt.compare(userData.password, user.password);
 
             if(!isMatch){
-                throw new Error('Invalid password');
+                return {success: false, status: 401, message : "Wrong password"};
             }
 
             const payload = {
@@ -52,10 +52,11 @@ export function userFactory(repository){
 
             const token =  jwtService.sign(payload)
 
-            return {success:true, token, user: {
+            return {success : true, status : 200, message : "Login successful", data : {
                 username : user.username,
-                email : user.email
-            }};
+                email : user.email,
+                token : token
+            }}
     },
 
 
