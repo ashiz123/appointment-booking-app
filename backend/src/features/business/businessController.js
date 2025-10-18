@@ -46,7 +46,7 @@ export async function updateBusiness(req, res){
         const updateData = req.body;
         const service = await businessService();
         const result = await service.updateBusiness(id, updateData, userId);
-        console.log(result);
+        
         return responseHandler(res, result);
    }
    catch(err){

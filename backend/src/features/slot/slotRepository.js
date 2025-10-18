@@ -25,7 +25,7 @@ const logger = getLogger();
             total_seats : seats 
         }
 
-        console.log('slotdoc', slotDoc);
+      
 
         const result = await this.db.collection(this.collectionName).insertOne(slotDoc);
         return result;

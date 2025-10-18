@@ -17,7 +17,7 @@ export async function createSlot(req, res, _next){
 
     for(let current = start; current + serviceDuration <= end; current += serviceDuration){
  
-        console.log("entered here");
+       
         const service = await slotService();
         const slotStart = minutesToDate(date, current);
         const slotEndMinute =  current + serviceDuration;

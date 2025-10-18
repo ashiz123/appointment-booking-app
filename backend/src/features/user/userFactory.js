@@ -24,8 +24,6 @@ export function userFactory(repository){
             created_at: new Date()
         }
 
-        console.log(userToSave);
-
          const data =  await repository.saveUser(userToSave);
          return {success: true, newUser: data};
     },

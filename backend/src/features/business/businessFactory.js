@@ -5,13 +5,15 @@ import { getOwnershipBusiness } from "../../shared/utils/checkBusinessOwnership.
 export function businessFactory(repository){
 
  return {
-    async createBuisness({name, email, address, start_time, end_time}, userId){
+    async createBuisness({name, address, start_time, end_time}, userId){
           if(!name){
-                throw new Error('Name and email are required');
+                throw new Error('Business name is required');
             }
-            const exists = await repository.existingBusinessNameWithEmail(name, email);
+
+
+            const exists = await repository.existingBusinessNameWithEmail(name);
             if(exists){
-                throw new Error('Business already exist');
+                throw new Error('Business name already exist'); //TODO: business name exist of that user should be check
             }
 
             const businessDetail = {
@@ -22,8 +24,7 @@ export function businessFactory(repository){
                 end_time: end_time
             };
 
-            console.log(businessDetail);
-
+           
             const insertedId = await repository.createBusinessRepository(businessDetail)
             return insertedId;
         },

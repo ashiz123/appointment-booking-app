@@ -17,8 +17,8 @@ export class BusinessRepository{
     }
 
 
-   async existingBusinessNameWithEmail(name, email){
-       return await this.db.collection(this.collectionName).findOne({name, email});
+   async existingBusinessNameWithEmail(name){
+       return await this.db.collection(this.collectionName).findOne({name});
    }
 
 
@@ -46,7 +46,7 @@ export class BusinessRepository{
             ownerId: new ObjectId(authId)
          });
 
-         console.log('business', businessId, authId);
+         
 
          if(!result){
             throw new Error("Business is not belong to authenticated user");

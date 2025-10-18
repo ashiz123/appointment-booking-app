@@ -27,8 +27,7 @@ describe("User register successful" , () => {
          .set('Accept', 'application/json')
          .send(body);
 
-         console.log('response', res.body, res.statusCode);
-
+         
          expect(res.statusCode).toBe(200);
          expect(res.body).toHaveProperty('message' , 'User registered succcessfully');
          expect(res.body.user).toMatch(/^[0-9a-fA-F]{24}$/);
@@ -42,7 +41,7 @@ describe("User register successful" , () => {
          .set('Accept', 'application/json')
          .send(body);
 
-        console.log('Response user again', res.body, res.statusCode);
+        
          expect(res.statusCode).toBe(400);
          expect(res.body).toHaveProperty('message' , 'User already exist');
 
@@ -65,7 +64,7 @@ describe("User register successful" , () => {
         .set('Accept', 'application/json')
         .send(body);
     
-        console.log('validation error', res.body, res.statusCode);
+       
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty('errors');
         expect(res.body.errors).toEqual(

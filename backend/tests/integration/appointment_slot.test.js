@@ -43,8 +43,8 @@ describe('Appointment slot route test', () => {
 
   it('should create the appointment slots', async() => {
        const appointmentSlot = {
-        "business_id" : businessId.toString(), 
-        "service_id" : businessOfferId.toString(),
+        "business_id" :  businessId.toString(), 
+        "service_id" :  businessOfferId.toString(),
         "business_start": "09:00",
         "business_end" : "17:00",
         "service_duration":  "30",
@@ -57,8 +57,6 @@ describe('Appointment slot route test', () => {
        .set('Accept', 'application/json')
        .set('Authorization', 'Bearer valid_token_123')
        .send(appointmentSlot);
-
-       
 
        expect(res.statusCode).toBe(200);
        expect(res.body).toHaveProperty('slots');
