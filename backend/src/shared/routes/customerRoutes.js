@@ -1,6 +1,6 @@
 import express from 'express';
 const router = express.Router();
-import { isValidateDate } from '../middlewares/isValidateDate.js';
+import { isValidDate } from '../middlewares/isValidDate.js';
 import { getSlotsByDate } from '../../features/slot/slotController.js';
 import { bookingController, rescheduleController,  cancelController } from '../../features/bookSlot/bookSlotController.js';
 import { validateRequest } from '../middlewares/validationRequest.js';
@@ -11,7 +11,7 @@ import { cancelBookingValidation } from '../../features/bookSlot/cancelBookingVa
 
 
 
-router.post('/appointment_slot/by_date',isValidateDate,  getSlotsByDate);
+router.post('/appointment_slot/by_date',isValidDate,  getSlotsByDate);
 router.post('/book_appointment',bookSlotValidation, validateRequest,  bookingController );
 // router.post('/booking_detail' , getBookingDetail);
 

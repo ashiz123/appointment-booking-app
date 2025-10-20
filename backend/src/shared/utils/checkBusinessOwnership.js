@@ -1,13 +1,27 @@
 
 
+/**
+ * 
+ * @param {Object} repo 
+ * @param {string} businessId 
+ * @param {string} userId 
+ * @returns {Promise<Object>}
+ * 
+ * This function call the db function named getBusinessById inside the businessRepository.
+ * If the business does not exist
+ * { error: true, status: 404, message: "Business not found" }
+ * Business is not of the authenticated user
+ * { error: true, status: 403, message: "Not authorized" }
+ * If ownership is valid
+ * {error : false, business : <businessObject>}
+ * 
+ */ 
 
 
 
-
-export async function getOwnershipBusiness(repo, businessId, userId){
+export async function checkBusinessOwnerhip(repo, businessId, userId){
     
-    // const db = await getDb();
-    // const businessRepository = new BusinessRepository(db);
+  
     const business = await repo.getBusinessById(businessId); // returns the document
 
 
@@ -19,7 +33,7 @@ export async function getOwnershipBusiness(repo, businessId, userId){
         return { error: true, status: 403, message: "Not authorized" };
     }
 
-    return { error: false, business };
+    return { error: false, status:200, business };
     
 
 

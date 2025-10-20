@@ -1,6 +1,6 @@
 
 import { ObjectId } from "mongodb";
-import { getOwnershipBusiness } from "../../shared/utils/checkBusinessOwnership.js";
+import { checkBusinessOwnerhip } from "../../shared/utils/checkBusinessOwnership.js";
 
 export function businessFactory(repository){
 
@@ -39,7 +39,7 @@ export function businessFactory(repository){
             return { status:400, success: false, message: 'No update data provided' };
         }
 
-        const check = await getOwnershipBusiness(repository, id, userId);
+        const check = await checkBusinessOwnerhip(repository, id, userId);
         if(check.error){
              return { status:check.status, success: false, message:check.message};
         }
@@ -61,7 +61,7 @@ export function businessFactory(repository){
            return { status:400, success: false, message: "Business id is required" };
         }
 
-         const check = await getOwnershipBusiness(repository, id, userId);
+         const check = await checkBusinessOwnerhip(repository, id, userId);
 
         if(check.error){
              return { status:check.status, success: false, message:check.message};

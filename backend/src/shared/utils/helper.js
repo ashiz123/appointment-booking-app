@@ -1,4 +1,4 @@
-export  function isValidateDate(day, next){
+export  function isValidDate(day, next){
     const dateEntered = new Date(day);
     dateEntered.setHours(0, 0, 0, 0);
 
