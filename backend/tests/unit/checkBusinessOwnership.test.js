@@ -1,5 +1,4 @@
 import { checkBusinessOwnerhip } from "../../src/shared/utils/checkBusinessOwnership";
-import {jest} from '@jest/globals';
 
 
 describe('getOwnershipBusiness', () => {

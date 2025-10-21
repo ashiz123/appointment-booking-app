@@ -9,7 +9,7 @@ beforeAll(async () => {
     if(!global.db)
     {
         await connect();
-        global.db = getDb();
+        global.db = await getDb();
     }   
     console.log('Connected tested successfully to the database');
   }
@@ -19,10 +19,7 @@ beforeAll(async () => {
     }
 });
 
-beforeEach(async() => {
-  await global.db.collection("business").deleteMany({});
- 
-})
+
 
 
 

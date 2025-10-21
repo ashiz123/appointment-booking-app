@@ -1,4 +1,5 @@
 {
   "jest.pathToJest": "npm test",
-  "testing.autoRun": "off"
+  "testing.autoRun": "off",
+  "jest.showTerminalOnRun" : false
 }

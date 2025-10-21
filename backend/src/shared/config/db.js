@@ -10,7 +10,11 @@ export async function connect(){
     }
 
     const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
-    const dbName = process.env.DB_NAME || (process.env.NODE_ENV === 'test' ? 'appt-app-test' : 'mydb');
+
+    console.log('prcess.env.node_env', process.env.DB_NAME);
+   
+   
+    const dbName = process.env.DB_NAME || (process.env.NODE_ENV === 'test' ? 'test' : 'mydb');
     console.log("Using database:", dbName);
 
     client = new MongoClient(url);
@@ -24,10 +28,9 @@ export async function connect(){
       throw err;
     }    
 
-   
-
-    return dbInstance;
+     return dbInstance;
 }
+
 
 export function getDb(){
  if(!dbInstance){
@@ -45,10 +48,11 @@ export function getClient(){
 
 
 export async function closeConnection(){
-if(client && client.topology?.isConnected()){   
-    await client.close();
-   
-}}
+    if(client && client.topology?.isConnected()){   
+        await client.close();
+    }
+    console.log('Client closed');
+}
 
 
 

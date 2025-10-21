@@ -1,5 +1,5 @@
 import { authenticate } from "../../src/shared/middlewares/authMiddleware"; 
-import {jest} from '@jest/globals';
+// import {jest} from '@jest/globals';
 
  
 describe('User authentication', () => {
