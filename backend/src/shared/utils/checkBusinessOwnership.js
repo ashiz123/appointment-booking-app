@@ -19,7 +19,7 @@
 
 
 
-export async function checkBusinessOwnerhip(repo, businessId, userId){
+export async function checkBusinessOwnership(repo, businessId, userId){
     
   
     const business = await repo.getBusinessById(businessId); // returns the document
