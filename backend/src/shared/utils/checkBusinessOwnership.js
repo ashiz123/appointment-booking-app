@@ -2,7 +2,7 @@
 
 /**
  * 
- * @param {Object} repo 
+ * @param {Object} businessRepository 
  * @param {string} businessId 
  * @param {string} userId 
  * @returns {Promise<Object>}
@@ -19,10 +19,10 @@
 
 
 
-export async function checkBusinessOwnership(repo, businessId, userId){
+export async function checkBusinessOwnership(businessRepository, businessId, userId){
     
   
-    const business = await repo.getBusinessById(businessId); // returns the document
+    const business = await businessRepository.getBusinessById(businessId); // returns the document
 
 
     if (!business) {

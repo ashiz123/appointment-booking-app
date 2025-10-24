@@ -31,26 +31,23 @@ export function businessFactory(repository){
 
 
 
-    async updateBusiness(id, updateData, userId){
-        if(!id){
+    async updateBusiness(businessId, updateData, userId){
+        if(!businessId){
            return { status:400, success: false, message: 'Business Id is required' };
         }
         if(!updateData || Object.keys(updateData).length === 0){
             return { status:400, success: false, message: 'No update data provided' };
         }
 
-        const check = await checkBusinessOwnership(repository, id, userId);
-        if(check.error){
-             return { status:check.status, success: false, message:check.message};
-        }
+        await repository.getBusinessByAuthUser(businessId , userId);
       
-        const result = await repository.updateBusinessRepository(id, updateData);
+        const result = await repository.updateBusinessRepository(businessId, updateData);
     
         if(result.matchedCount > 0 && result.modifiedCount === 0){
              return { status:400, success: false, message: 'Business is already updated' };
         }
 
-        return {status:200, success: true, data: id};
+        return {status:200, success: true, data: businessId};       
 
      },
 

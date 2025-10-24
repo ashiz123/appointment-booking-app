@@ -35,6 +35,7 @@ export class BusinessRepository{
         return result;
    }
 
+
    async getBusinessById(businessId){
         const result = await this.db.collection(this.collectionName).findOne({_id : new ObjectId(businessId)});
         return result;
@@ -46,14 +47,16 @@ export class BusinessRepository{
             ownerId: new ObjectId(authId)
          });
 
-         
-
          if(!result){
             throw new Error("Business is not belong to authenticated user");
          }
          
          return result;
    }
+
+
+
+ 
 
 
  
