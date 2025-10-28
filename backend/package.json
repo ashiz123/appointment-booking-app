@@ -6,9 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon --legacy-watch server.js",
-    "lint" : "eslint .",
+    "lint": "eslint .",
     "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
-   
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -37,9 +36,9 @@
     "babel-jest": "^30.0.5",
     "eslint": "^9.37.0",
     "globals": "^16.4.0",
-    "jest": "^30.0.5", 
+    "jest": "^30.0.5",
     "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
     "supertest": "^7.1.4"
   }
-  
 }
