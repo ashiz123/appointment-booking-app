@@ -7,14 +7,14 @@ import '../setup/setup.js';
 describe('User login', () => {
 
       const USER_CREDENTIALS = {
-             "username": "pukar",
+             "email": "pukar@gmail.com",
              "password": "123456"
         }
 
       const REGISTER_USER = {
-            ...USER_CREDENTIALS,
+            "username": "pukar",
             "email": "pukar@gmail.com",
-            
+            "password": "123456"
       }  
 
       beforeEach(async() => {
@@ -42,7 +42,7 @@ describe('User login', () => {
 
     it('should return wrong password ', async() => {
       const WRONG_CREDENTIALS = {
-        "username" : "pukar",
+        "email" : "pukar@gmail.com",
         "password" : "testingwrong"
       }
 
@@ -61,10 +61,10 @@ describe('User login', () => {
 })
 
 
-describe('User login validation', () => {
-      it('should show username required ' , async() => {
+    describe('User login validation', () => {
+      it('should show email required ' , async() => {
         const loginBody = {
-          'username' : "",
+          'email' : "",
           'password' : "123456"
         }
 
@@ -79,8 +79,8 @@ describe('User login validation', () => {
         expect(res.body).toHaveProperty('errors');
         expect(res.body.errors).toEqual(
           expect.arrayContaining([
-            expect.objectContaining({path : 'username', msg : 'Username is required'}),
-            expect.objectContaining({path : 'username', msg : 'Username must be only letters'})
+            expect.objectContaining({path : 'email', msg : 'Email is required'}),
+            expect.objectContaining({path : 'email', msg : 'Invalid email'})
           ]))
         
       })

@@ -1,5 +1,6 @@
 
 import { ObjectId } from "mongodb";
+import { AppError } from "../../shared/utils/appError.js";
 
 export class BusinessRepository{
 
@@ -41,14 +42,15 @@ export class BusinessRepository{
         return result;
    }
 
+   
+
   async getBusinessByAuthUser(businessId , authId){
          const result = await this.db.collection(this.collectionName).findOne({
             _id : new ObjectId(businessId),
-            ownerId: new ObjectId(authId)
+            owner: new ObjectId(authId)
          });
-
          if(!result){
-            throw new Error("Business is not belong to authenticated user");
+            throw new AppError("permissionDenied", [{type : "authorization", path: "businessRepository", msg: "Business offer is not of authenticated user"}]);
          }
          
          return result;

@@ -7,13 +7,12 @@ export function businessFactory(repository){
  return {
     async createBuisness({name, address, start_time, end_time}, userId){
           if(!name){
-                throw new Error('Business name is required');
+                throw new Error('validationError');
             }
-
 
             const exists = await repository.existingBusinessNameWithEmail(name);
             if(exists){
-                throw new Error('Business name already exist'); //TODO: business name exist of that user should be check
+                throw new Error('resourceAlreadyExist'); //TODO: business name exist of that user should be check
             }
 
             const businessDetail = {
@@ -33,18 +32,24 @@ export function businessFactory(repository){
 
     async updateBusiness(businessId, updateData, userId){
         if(!businessId){
-           return { status:400, success: false, message: 'Business Id is required' };
+          console.log('Business id is required');
+          throw new Error('validationError');
         }
         if(!updateData || Object.keys(updateData).length === 0){
-            return { status:400, success: false, message: 'No update data provided' };
+            console.log('No update data provided');
+            throw new Error('validationError', [{type: "field", path: "businessFactory", msg : 'No any data provided'}]);
+            // return { status:400, success: false, message: 'No update data provided' };
         }
 
+        
         await repository.getBusinessByAuthUser(businessId , userId);
       
         const result = await repository.updateBusinessRepository(businessId, updateData);
     
         if(result.matchedCount > 0 && result.modifiedCount === 0){
-             return { status:400, success: false, message: 'Business is already updated' };
+            //  return { status:400, success: false, message: 'Business is already updated' };
+            console.log('Business already updated');
+            throw new Error('conflictError');
         }
 
         return {status:200, success: true, data: businessId};       

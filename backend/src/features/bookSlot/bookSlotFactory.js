@@ -45,7 +45,6 @@ export function bookSlotFactory(bookRepo, slotRepo){
                if(bookedSeat.acknowledged && bookedSeat.modifiedCount > 0){
                     const canceled = await slotRepo.unbookingSeat(slot_id);
                     if(canceled.modifiedCount === 1 ){
-                     console.log("Unbook the appointment slot collection, Rolling back");
                     }
                 }
 
@@ -73,10 +72,8 @@ export function bookSlotFactory(bookRepo, slotRepo){
                 const previousBooking = await bookRepo.fetchBookingDetail(booking_reference);
 
                 await slotRepo.unbookingSeat(previousBooking.appointment_slot_id);
-                console.log('unbooked previous slot');
 
                 await slotRepo.bookingSeat(slot_id);
-                console.log('booking another appointment slot successful');
 
                 const reschedule = await bookRepo.rescheduleBooking(booking_reference, slot_id);
                 
@@ -109,7 +106,6 @@ export function bookSlotFactory(bookRepo, slotRepo){
             }
 
             const cancelAppointment = await bookRepo.cancleBookedSlot(email, booking_reference);
-            console.log(cancelAppointment);
 
 
             if(cancelAppointment.matchedCount === 0 || cancelAppointment.modifiedCount === 0){
@@ -130,7 +126,6 @@ export function bookSlotFactory(bookRepo, slotRepo){
         async getBookedAppointment(fromDate, toDate, authId){
          try{  
             if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime())) {
-               console.log('here it is')
                throw new Error('From and To date are required and must be valid dates');
             }
 

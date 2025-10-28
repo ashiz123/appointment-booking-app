@@ -1,5 +1,5 @@
 import { jwtService } from "../services/jwtServices.js";
-
+import { AppError } from "../utils/appError.js";
 
 export function authenticate(req, res, next){
 
@@ -22,10 +22,8 @@ export function authenticate(req, res, next){
     }
     next();
   }catch(err){
-    return res.status(400).json({
-      message : "Invalid token",
-      error: err.message
-    })
+    console.log('auth', err.message);
+    throw new AppError('authenticationFailed' , [{ type : "middleware", path : "authMiddleware", msg: err.message}]  );
   }
   
   

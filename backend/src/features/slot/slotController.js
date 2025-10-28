@@ -5,7 +5,7 @@ const logger = getLogger();
 
 
 
-export async function createSlot(req, res, _next){
+export async function createSlot(req, res, next){
 
     //validation - express-validator in route
     const {business_id , service_id, business_start, business_end, service_duration, date, seats} = req.body;
@@ -33,11 +33,7 @@ export async function createSlot(req, res, _next){
             });
         }
         catch(err){
-            // console.error(err.errInfo.details.schemaRulesNotSatisfied);
-            return res.status(500).json({
-                message : err.message
-            })
-            // next(err);  custom middleware for error handling is not working
+            return next(err);
         }
     }
 
@@ -56,7 +52,6 @@ export async function getSlotsByDate(req, res, _next){
     
     const service = await slotService();
     const data = await service.showSlotByDate(filterDay, tomorrow);
-    logger.info(data);
 
     return res.status(200).json({data}); 
   }

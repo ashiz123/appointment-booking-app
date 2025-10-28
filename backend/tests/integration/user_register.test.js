@@ -42,8 +42,8 @@ describe("User register successful" , () => {
          .send(body);
 
         
-         expect(res.statusCode).toBe(400);
-         expect(res.body).toHaveProperty('message' , 'User already exist');
+         expect(res.statusCode).toBe(409);
+         expect(res.body).toHaveProperty('message' , 'Resource already exist');
 
 
     });

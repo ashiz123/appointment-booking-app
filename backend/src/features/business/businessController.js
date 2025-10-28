@@ -38,19 +38,19 @@ export async function deleteBusiness(req, res){
 }
 
 
-export async function updateBusiness(req, res){
+export async function updateBusiness(req, res, next){
 
    try{
-        const id = req.params.id;
+        const businessId = req.params.businessId;
         const userId = req.user.id;
         const updateData = req.body;
         const service = await businessService();
-        const result = await service.updateBusiness(id, updateData, userId);
+        const result = await service.updateBusiness(businessId, updateData, userId);
         
         return responseHandler(res, result);
    }
    catch(err){
-        return handleError(res, err);
+         next(err);
     }
 
 }

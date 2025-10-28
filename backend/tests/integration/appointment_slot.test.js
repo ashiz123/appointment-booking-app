@@ -18,7 +18,7 @@ describe('Appointment slot route test', () => {
         
         
         const businessResult = await global.db.collection('business').insertOne({
-            ownerId: new ObjectId(userId),   // <-- very important
+            owner: new ObjectId(userId),   // <-- very important
             name: 'Test Business',
             address: '123 Street',
             start_time: '09:00',
@@ -84,8 +84,8 @@ describe('Appointment slot route test', () => {
        .send(appointmentSlot);
 
 
-       expect(res.statusCode).toBe(500);
-       expect(res.body.message).toEqual('Business is not belong to authenticated user');
+       expect(res.statusCode).toBe(403);
+       expect(res.body.message).toEqual('Not authorized');
        
     }); 
 

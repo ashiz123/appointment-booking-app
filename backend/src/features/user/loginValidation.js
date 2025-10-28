@@ -3,12 +3,12 @@ import { body } from "express-validator";
 
 
 export const loginValidation = [
-    body("username")
-        .notEmpty()
-        .withMessage('Username is required')
+    body("email")
+      .notEmpty()
+      .withMessage('Email is required')
 
-        .isAlpha()
-        .withMessage('Username must be only letters'),
+      .isEmail()
+      .withMessage('Invalid email'),
 
     
     body("password")

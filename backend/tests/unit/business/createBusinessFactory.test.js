@@ -1,18 +1,9 @@
 
 
 import {jest} from '@jest/globals';
-
 import {ObjectId} from 'mongodb';
-
-// Mock the checkBusinessOwnership function before importing
-const mockCheckBusinessOwnership = jest.fn();
-jest.mock('../../src/shared/utils/checkBusinessOwnership', () => ({
-  checkBusinessOwnership: mockCheckBusinessOwnership
-}));
-
-// Import after mocking
 import { businessFactory } from "../../../src/features/business/businessFactory";
-import { checkBusinessOwnership } from "../../../src/shared/utils/checkBusinessOwnership";
+
 
 
 
@@ -33,22 +24,19 @@ describe('createBusiness', () => {
 
     it('should throw error of business name is required',  async () => {
        await expect( business.createBuisness({ address: "Street 1" }, "user1"))
-        .rejects.toThrow("Business name is required");
+        .rejects.toThrow("validationError");
     });
 
      it('should throw business name already exist', async() => {
         mockBusinessRepository.existingBusinessNameWithEmail.mockResolvedValue(true);
         await expect(business.createBuisness({name : "shop1"}))
-        .rejects.toThrow('Business name already exist');
+        .rejects.toThrow('resourceAlreadyExist');
      });
 
 
 
      it('should create the new business', async() => {
-    
-
-       mockBusinessRepository.existingBusinessNameWithEmail.mockResolvedValue(false);
-
+      mockBusinessRepository.existingBusinessNameWithEmail.mockResolvedValue(false);
       const fakeInsertedId = new ObjectId();
       mockBusinessRepository.createBusinessRepository.mockResolvedValue(
          { insertedId : fakeInsertedId,

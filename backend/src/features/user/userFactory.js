@@ -10,10 +10,10 @@ export function userFactory(repository){
    return {
     //register
     async registerUser(userData){
-            const existingUser = await repository.findUserByUsername(userData.username);
+            const existingUser = await repository.findUserByEmail(userData.email);
         
         if(existingUser){
-            throw new Error('User already exist');
+            throw new Error('resourceAlreadyExist');
         }
 
         const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -30,10 +30,10 @@ export function userFactory(repository){
 
     //login
      async loginUser(userData){
-            const user = await repository.findUserByUsername(userData.username);
+            const user = await repository.findUserByEmail(userData.email);
             
             if(!user){
-                throw new Error('User not found');
+                throw new Error('validationError');
             }
 
             const isMatch = await bcrypt.compare(userData.password, user.password);

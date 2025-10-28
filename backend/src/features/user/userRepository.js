@@ -1,19 +1,4 @@
-// import { getDb } from "../../shared/config/db.js";
 
-// const COLLECTION_NAME = 'users';
-
-
-// export async function findUserByUsername(username){
-//     const db = getDb();
-//     return await db.collection(COLLECTION_NAME).findOne({username});
-// }
-
-// export async function saveUser(user){
-//     const db = getDb();
-//     const result = await db.collection(COLLECTION_NAME).insertOne(user);
-//     const userId = result.insertedId;
-//     return userId;
-// }
 
 export class UserRepository {
 
@@ -23,15 +8,32 @@ export class UserRepository {
     }
 
     async  findUserByUsername(username){
-       return await this.db.collection(this.collection).findOne({username});    
+        try{
+           return await this.db.collection(this.collection).findOne({username});   
+        }catch(err){
+            throw new Error('databaseError')
+        } 
     }
 
 
     async  saveUser(user){
-    const result = await this.db.collection(this.collection).insertOne(user);
-    const userId = result.insertedId;
-    return userId;
+        try{
+            const result = await this.db.collection(this.collection).insertOne(user);
+            const userId = result.insertedId;
+            return userId;
+        }catch(err){
+            throw new Error('databaseError')
+        }
+   
     }  
+
+    async findUserByEmail(email){
+        try{
+            return await this.db.collection(this.collection).findOne({email});
+        }catch(err){
+            throw new Error('databaseError')
+        }
+    }
 
 
 

@@ -29,4 +29,4 @@ describe('User authentication', () => {
         expect(next).toHaveBeenCalled();
     })
 
-});
+}); 

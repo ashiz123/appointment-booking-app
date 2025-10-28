@@ -1,13 +1,4 @@
 import {jest} from '@jest/globals';
-
-import {ObjectId} from 'mongodb';
-
-
-jest.mock('../../src/shared/utils/checkBusinessOwnership', () => ({
-  checkBusinessOwnership: jest.fn()
-}));
-
-// Import after mocking
 import { businessFactory } from "../../../src/features/business/businessFactory";
 
 
@@ -29,16 +20,12 @@ import { businessFactory } from "../../../src/features/business/businessFactory"
     });
 
 
-    it('should display business id required', async() => {
-        const result = await business.updateBusiness(null, { name: 'shop' }, 'user1')
-        expect(result).toEqual({
-            status: 400,
-            success: false,
-            message: 'Business Id is required',
-            });
+    it('should display validation error', async() => {
+        const result =  business.updateBusiness(null, { name: 'shop' }, 'user1');
+        await expect(result).rejects.toThrow('validationError');
     });
 
-   it('should reject when business is not owned by the authenticated user', async () => {
+   it('throw permission denied', async () => {
         mockBusinessRepository.getBusinessByAuthUser.mockRejectedValue(
             new Error("Business is not belong to authenticated user")
         );
@@ -59,7 +46,7 @@ import { businessFactory } from "../../../src/features/business/businessFactory"
 
        const updateBusiness  ={
            id : '1',
-           ownerId : 'user1',
+           owner : 'user1',
            name : 'Shop Updated'
         }
 

@@ -1,5 +1,5 @@
 
-import {body} from "express-validator";
+import {body, param} from "express-validator";
 
 export const createBusinessOfferValidation = [
 
@@ -20,4 +20,12 @@ export const createBusinessOfferValidation = [
     body('duration')
     .notEmpty().withMessage('Duration is required')
     .isInt({min:1}).withMessage('Duration must be integer value')
+    
 ]
+
+
+export const updateAndDeleteBusinessValidation = [
+    param('offerId')
+    .notEmpty().withMessage('Business offer id is required')
+    .isMongoId().withMessage('Invalid business offer id')
+] 

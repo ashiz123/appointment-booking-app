@@ -1,7 +1,8 @@
 import {ObjectId} from 'mongodb'
+import { AppError } from '../../shared/utils/appError.js';
 
 
-export function BusinessOfferFactory(repository){
+export function BusinessOfferFactory(businessOfferRepo, businessRepo){
 
 
     return{
@@ -13,7 +14,7 @@ export function BusinessOfferFactory(repository){
 
             const offerData = {
                 name : name,
-                description : description,
+                description : description, 
                 businessId: new ObjectId(businessId),
                 price : price,
                 duration: duration,
@@ -22,19 +23,63 @@ export function BusinessOfferFactory(repository){
             }
 
             
-            const businessOfferId = await repository.create(offerData);
+            const businessOfferId = await businessOfferRepo.create(offerData);
             return {
             status: 200,    
             success: true,
-            data: businessOfferId
+            data: businessOfferId,
+            message : 'Business offer created successfully'
            };
         },
 
 
-
-    }
-
-
+    
+         async updateOffer(businessOfferId, updatedData, authId){
 
 
-}
+            const businessOffer = await businessOfferRepo.getBusinessId(businessOfferId);
+           
+            if(!businessOffer){
+                throw new AppError('resourceDoesNotExist', [{ type : "field",path : "businessOfferRepository", msg: "Business offer not found"}] );
+            }
+
+            if(!updatedData || Object.keys(updatedData).length === 0){
+                throw new AppError('resourceDoesNotExist', [{ type : "field", path : "businessOfferRepository", msg: "No any data provided"}] );
+            }
+
+            
+             await businessRepo.getBusinessByAuthUser(businessOffer.businessId, authId);
+
+             const result = await businessOfferRepo.update(businessOfferId, updatedData);
+             if(result.matchedCount > 0 && result.modifiedCount === 0){
+                throw new Error('conflictError');
+                }
+            return {status : 200 , success: true, message : "Business offer updated successfully"};
+        },
+
+
+
+       async deleteOffer(businessOfferId, authId){
+            const businessOffer = await businessOfferRepo.getBusinessId(businessOfferId);
+            
+            if(! businessOffer.businessId){
+                 throw new AppError('resourceDoesNotExist', [{ type : "field",path : "businessOfferRepository", msg: "Business not found"}] );
+            }
+            await businessRepo.getBusinessByAuthUser( businessOffer.businessId, authId);
+            
+            const result = await businessOfferRepo.delete(businessOfferId);
+            if(result.deletedCount === 1){
+                return {status : 200 , success: true, message : "Business offer deleted successfully"};
+            }else{
+                throw new Error('conflictError');
+            }
+        }
+
+    }}
+
+
+   
+
+
+
+

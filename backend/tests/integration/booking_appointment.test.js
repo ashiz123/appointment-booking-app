@@ -19,7 +19,7 @@ describe('Booking appointment successful', () => {
         const userId = new ObjectId(); //fake user 
 
         const business = await global.db.collection('business').insertOne({
-            ownerId: userId,   // <-- very important
+            owner: userId,   // <-- very important
             name: 'Test Business',
             address: '123 Street',
             start_time: '09:00',

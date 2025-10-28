@@ -1,14 +1,14 @@
+import { customErrors } from "../utils/customErrors.js";
+
 export default function errorHandler(err, _req, res , _next){
   
-    const status = err.status || 500;
-    const message = 
-     process.env.NODE_ENV === 'production' 
-     ? 'Something went wrong'
-     : err.message 
-
-    res.status(status).json({
-        success: false,
-        error: message,
-        })
+   try{
+      const errorTemplate = customErrors[err.message]; //bracket object notation
+      res.status(errorTemplate.statusCode).json({success:false,  ...errorTemplate, errors: err.error || undefined});
+    }
+    catch(e){
+        res.statusCode = 500;
+        res.send({error : true,  errorDetail : e.message, ...customErrors['serverError']});
+    }
 }
 

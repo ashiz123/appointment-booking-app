@@ -1,8 +1,7 @@
  
 import { getSlotsByDatePipeline } from "./pipelines/slotPipeline.js";
-import { getLogger } from "../../shared/utils/logger.js";
+import { AppError } from "../../shared/utils/appError.js";
 import { ObjectId } from "mongodb";
-const logger = getLogger();
 
  export class SlotRepository{
 
@@ -12,8 +11,8 @@ const logger = getLogger();
     }
 
   async createSlot(slot_start, slot_end, businessId, serviceId, seats){
-    if (!slot_start || !slot_end) throw new Error("Slot start and end required");
-         if(!seats || seats < 1) throw new Error("Seats is required and must me atleast 1")
+    if (!slot_start || !slot_end) throw new AppError("validationError", [{msg: "Slot start and end required"}]);
+         if(!seats || seats < 1) throw new AppError("validationError", [{msg: "Seats is required and must me atleast 1"}])
 
         const slotDoc = {
             business_id : new ObjectId(businessId),
@@ -41,10 +40,10 @@ const logger = getLogger();
   async bookingSeat(slot_id){
         try {
             const slot = await this.db.collection("appointment_slots").findOne({ _id: slot_id });
-            if (!slot) throw new Error("Slot not found");
+            if (!slot) throw new AppError("resourceNotFound", [{msg: "Slot not found"}]);
 
             if (slot.total_seats - slot.booked === 0) {
-            throw new Error("Slot booking trying to exceed total seats");
+            throw new AppError("slotBookingExceeded", [{msg: "Slot booking trying to exceed total seats"}]);
             }
 
            const result = await this.db.collection(this.collectionName).updateOne(
@@ -54,7 +53,6 @@ const logger = getLogger();
 
             return result;
         } catch (err) {
-            logger.error(`Book seat failed for slot_id ${slot_id}: ${err.message}`);
             throw err;
         }
     }
@@ -69,13 +67,13 @@ const logger = getLogger();
             )
 
             if (result.matchedCount === 0 || result.modifiedCount === 0) {
-                    throw new Error("Failed to unbook seat");
+                    throw new AppError("failedToUnbook", [{msg: "Failed to unbook seat"}]);
             }
 
             return result;
         }
         catch(err){
-            throw new Error(`Unbook seat failed : ${err.message}`)
+            throw err;
         }
 
 
@@ -84,7 +82,7 @@ const logger = getLogger();
 
     
      async  showSlotByDate(day, nextDay){
-        if(!day) throw new Error('Date is required');
+        if(!day) throw new AppError("validationError", [{msg: "Date is required"}]);
         const pipeline = await getSlotsByDatePipeline(day, nextDay);
         const results = await this.db.collection(this.collectionName).aggregate(pipeline).toArray();
         return results;
@@ -94,8 +92,8 @@ const logger = getLogger();
     //Valid date is greater than current date
     async isDateValid(slot_id){
         const result = await this.db.collection(this.collectionName).findOne({ _id: slot_id });
-        if (!result) throw new Error("No document found");
-        if (!(result.slot_start instanceof Date)) throw new Error("Invalid slot_start value");
+        if (!result) throw new AppError("resourceNotFound", [{msg: "No document found"}]);
+        if (!(result.slot_start instanceof Date)) throw new AppError("validationError", [{msg: "Invalid slot_start value"}]);
         return result.slot_start > new Date();
     }
 

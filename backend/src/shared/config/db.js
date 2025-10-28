@@ -11,18 +11,15 @@ export async function connect(){
 
     const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
 
-    console.log('prcess.env.node_env', process.env.DB_NAME);
    
    
     const dbName = process.env.DB_NAME || (process.env.NODE_ENV === 'test' ? 'test' : 'mydb');
-    console.log("Using database:", dbName);
 
     client = new MongoClient(url);
 
     try{
      await client.connect();
      dbInstance = client.db(dbName)
-     console.log('Mongo db connected successfully');
     }catch(err){
       console.error("MongoDB connection failed:", err.message);
       throw err;
@@ -51,9 +48,4 @@ export async function closeConnection(){
     if(client && client.topology?.isConnected()){   
         await client.close();
     }
-    console.log('Client closed');
 }
-
-
-
-
