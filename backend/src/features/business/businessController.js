@@ -39,8 +39,7 @@ export async function deleteBusiness(req, res){
 
 
 export async function updateBusiness(req, res, next){
-
-   try{
+  try{
         const businessId = req.params.businessId;
         const userId = req.user.id;
         const updateData = req.body;

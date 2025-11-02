@@ -11,7 +11,7 @@ describe('Appointment slot route test', () => {
     let userId = '68e699a649500a709aa9b8c3';
 
 
-     beforeEach(async() => {
+     beforeAll(async() => {
         await global.db.collection('appointment_slots').deleteMany({});
         await global.db.collection('business_offer').deleteMany({});
         await global.db.collection('business').deleteMany({});
@@ -90,8 +90,7 @@ describe('Appointment slot route test', () => {
     }); 
 
 
-  
+});
 
 
 
-})

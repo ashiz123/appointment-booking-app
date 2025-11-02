@@ -13,7 +13,7 @@ describe("User register successful" , () => {
             "email": "pukar@gmail.com",
             "password": "123456"
         }
-        beforeEach(async () => {
+        beforeAll(async () => {
         await global.db.collection('users').deleteMany({});
         });
 

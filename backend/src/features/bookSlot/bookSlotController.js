@@ -10,12 +10,7 @@ export async function bookingController(req, res, next){
     return responseHandler(res, result);
   }
   catch(err){
-  // return res.status(400).json({
-  //       source: err.source,  // <-- use the property you set
-  //       message: err.message
-  //     });
-  next(err);
-    
+    next(err);
   }
 }
 

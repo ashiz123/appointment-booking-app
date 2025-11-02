@@ -7,7 +7,7 @@ import '../setup/setup.js';
 
 describe("Test create business", () => { 
 
-    beforeEach(async() => {
+    beforeAll(async() => {
        await global.db.collection("business").deleteMany({});
     });
 

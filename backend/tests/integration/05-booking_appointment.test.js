@@ -10,7 +10,7 @@ describe('Booking appointment successful', () => {
     let businessId;
     let serviceId;
 
-    beforeEach(async() => {
+    beforeAll(async() => {
       
         await global.db.collection('business_offer').deleteMany({});
         await global.db.collection('business').deleteMany({});
@@ -43,7 +43,7 @@ describe('Booking appointment successful', () => {
         });
 
 
-        afterEach(async() => {
+        afterAll(async() => {
             await global.db.collection('appointment_slots').deleteMany({});
         })
 

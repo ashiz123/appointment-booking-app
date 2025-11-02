@@ -1,4 +1,6 @@
-
+import {ObjectId} from 'mongodb';
+import { AppError } from "../../shared/utils/appError.js";
+import { redisClient } from '../../shared/config/redisClient.js';
 
 export class UserRepository {
 
@@ -34,6 +36,22 @@ export class UserRepository {
             throw new Error('databaseError')
         }
     }
+
+    async findUserById(id){
+        try{
+             const user = await this.db.collection(this.collection).findOne({_id : new ObjectId(id)});
+             if(!user){
+                 throw new AppError('resourceDoesNotExist',[{msg: "User not found"}] )
+             }
+             return user;
+        }
+        catch(err){
+            throw new AppError("databaseError", [{msg: "Database error while getting user by id", detail: err.message}]);
+        }
+    }
+
+ 
+
 
 
 

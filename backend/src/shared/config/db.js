@@ -10,10 +10,8 @@ export async function connect(){
     }
 
     const url = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017";
-
-   
-   
-    const dbName = process.env.DB_NAME || (process.env.NODE_ENV === 'test' ? 'test' : 'mydb');
+    const dbName = process.env.DB_NAME || (process.env.NODE_ENV === 'test' ? 'testdb' : 'testdb' );
+    console.log(url)
 
     client = new MongoClient(url);
 
@@ -34,7 +32,7 @@ export function getDb(){
     throw new Error('Mongodb not connected. Call connect first');
  }    
  return dbInstance;
-}
+}     
 
 export function getClient(){
     if(!client){

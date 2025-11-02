@@ -12,9 +12,9 @@ describe('Test create business offer', () => {
   };
 
   let newBusiness;
-  let businessOfferId;
+ 
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     //clear the business first
     //before businessoffer, we need business created
     try {
@@ -45,7 +45,7 @@ describe('Test create business offer', () => {
       .set('Authorization', 'Bearer valid_token_123')
       .send(businessOfferData);
 
-    businessOfferId = res.body.data;
+    // businessOfferId = res.body.data;
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('data');
@@ -67,7 +67,7 @@ describe('Failure updating and deleting business offer', () => {
   let newBusiness;
   let businessOfferId;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     //clear the business first
     //before businessoffer, we need business created
     try {

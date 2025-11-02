@@ -30,3 +30,14 @@ export async function loginController(req, res, next) {
 }
 
 export async function logoutController() {}
+
+export async function userProfile(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const service = await userService();
+    const data = await service.getUserById(userId);
+    return res.json(data);
+  } catch (err) {
+    next(err);
+  }
+}

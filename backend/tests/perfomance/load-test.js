@@ -16,5 +16,5 @@ export default function () {
     'status is 200': (r) => r.status === 200,
   });
 
-  sleep(1); // Wait 1 second between requests
+  sleep(1); // Wait 1 second between request
 }

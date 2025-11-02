@@ -15,6 +15,7 @@ Thumbs.db
 #ignore logs
 logs/
 backend/logs/
+backend/src/practice/
 tests/unit/trying.test.js
 tests/unit/dummySpying.test.js
 tests/unit/mockModulePractice.js

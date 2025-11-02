@@ -17,7 +17,7 @@ describe('User login', () => {
             "password": "123456"
       }  
 
-      beforeEach(async() => {
+      beforeAll(async() => {
         await global.db.collection('users').deleteMany({});
         await request(app)
         .post('/users/register')
@@ -26,18 +26,7 @@ describe('User login', () => {
       }); 
 
 
-    it('should successfully login registered user', async() => {
-        const res = await request(app)
-        .post('/users/login')
-        .set('Accept', 'application/json')
-        .send(USER_CREDENTIALS);
-
-        expect(res.statusCode).toBe(200);
-        expect(res.body.message).toEqual('Login successful');
-        expect(res.body.data).toHaveProperty('token');
-        expect(res.body.data.token.length).toBeGreaterThan(10);
-      
-    });
+  
 
 
     it('should return wrong password ', async() => {
@@ -53,7 +42,22 @@ describe('User login', () => {
 
         expect(res.body.message).toEqual('Wrong password');
         expect(res.statusCode).toEqual(401);
-    })
+    });
+
+
+      it('should successfully login  user', async() => {
+        const res = await request(app)
+        .post('/users/login')
+        .set('Accept', 'application/json')
+        .send(USER_CREDENTIALS);
+        
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.message).toEqual('Login successful');
+        expect(res.body.data).toHaveProperty('token');
+        expect(res.body.data.token.length).toBeGreaterThan(10);
+      
+    });
 
     
 
