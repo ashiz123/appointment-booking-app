@@ -7,8 +7,9 @@ export function BusinessOfferFactory(businessOfferRepo, businessRepo){
 
     return{
         async addService({name, description, price,duration, businessId}){
-            if (!name) throw new Error("Name is required");
-            if (price == null) throw new Error("Price is required");
+         
+            if (!name) throw new AppError('validationError', [{message : "Name is required"}]);
+             if (!price) throw new AppError('validationError', [{message : "Price is required"}]);
             if(!duration) throw new Error("Duration is required");
             if (!businessId) throw new Error("Business ID is required");
 
