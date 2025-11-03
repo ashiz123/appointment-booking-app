@@ -73,12 +73,18 @@ export function userFactory(repository){
           
             if(cachedUser){
                 console.log("Already cached, User from cache");
-                return JSON.parse(cachedUser);
+                const user = JSON.parse(cachedUser);
+                return {
+                    success: true,
+                    status: 200,
+                    data: user,
+                    cached: true
+                };
             }
 
             const user = await repository.findUserById(id);
             await redisClient.set(cachedKey, JSON.stringify(user), {EX: 60*60});
-            return {success : true, status: 200, data : user};
+            return {success : true, status: 200, data : user, cached : false};
         }
         catch(err){
             console.log(err);
