@@ -1,7 +1,7 @@
 
 
 import { ObjectId } from "mongodb";
-
+import { AppError } from "../../shared/utils/appError";
 
 export class BusinessOfferRepository{
 
@@ -12,9 +12,15 @@ constructor(db){
 
 
    async create(businessOffer){
-      const  result = await this.db.collection(this.collectionName).insertOne(businessOffer);
-      const businessOfferId = result.insertedId;
-      return businessOfferId;
+      try{
+         const  result = await this.db.collection(this.collectionName).insertOne(businessOffer);
+         const businessOfferId = result.insertedId;
+         return businessOfferId;
+      }
+      catch(error){
+        console.log(error.message);
+        throw new AppError('databaseError', [{message : 'Database error found to create business offer'}])
+      }
     }
 
     async update(id, data){
