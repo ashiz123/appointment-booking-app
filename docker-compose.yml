@@ -10,7 +10,12 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-   
+
+  redis:
+     container_name: redis
+     image: redis:latest
+     ports : 
+       - "6379:6379"
    
   backend:
     container_name: backend
@@ -19,13 +24,16 @@ services:
       - "3000:3000"
     depends_on:
       - mongodb
+      - redis
     volumes:
       - ./backend:/app        # Sync your local code with the container
       - /app/node_modules  
     env_file:
      - ./backend/.env
-    environment:              #Docker environment
+    environment:             #Docker environment
       - DOCKER=true
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
 
 
   frontend:
