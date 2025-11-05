@@ -10,6 +10,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+       
+
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        
+
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
@@ -23,6 +36,8 @@ jobs:
         run: npm ci
       - name: Load test environment variables
         run: cp backend/.env.test backend/.env
+      - name: Wait for MongoDB and redis
+        run: sleep 10  
       - name: Test backend
         working-directory: ./backend
         run: npm test
