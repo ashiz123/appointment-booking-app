@@ -21,6 +21,8 @@ jobs:
       - name: Install backend dependencies
         working-directory: ./backend
         run: npm ci
+      - name: Load test environment variables
+        run: cp backend/.env.test backend/.env
       - name: Test backend
         working-directory: ./backend
         run: npm test
