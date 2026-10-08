@@ -29,6 +29,7 @@ export function bookSlotFactory(bookRepo, slotRepo) {
             buildBooking(slot_id, fullname, email, phone, status)
           );
 
+          //send appointmentEmail
           await sendAppointmentEmail(
             email,
             fullname,

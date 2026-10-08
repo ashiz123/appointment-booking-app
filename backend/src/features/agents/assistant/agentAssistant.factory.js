@@ -1,7 +1,7 @@
 import { Ollama } from 'ollama';
 import { buildBooking } from '../../bookSlot/bookingSlotModel.js';
 
-export function agentAssistantFactory(slotRepo, bookRepo) {
+export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
   return {
     ollama: new Ollama({
       host: process.env.OLLAMA_HOST || 'http://host.docker.internal:11434',
@@ -97,30 +97,57 @@ export function agentAssistantFactory(slotRepo, bookRepo) {
       const messages = [
         {
           role: 'system',
-          content: `
-            You are a helpful booking assistant.
-            Current date and time: ${todayStr} at ${currentTimeStr}.
-            Always resolve relative dates (like "today", "tomorrow", or "after a week") into absolute YYYY-MM-DD format when calling tools.
-            
-            Time Filtering Rule for Today:
-            - Do not allow booking slots that are in the past relative to the current time (${currentTimeStr}).
+          content: `You are an appointment assistant. Help users check available appointments and book a specific appointment.
 
-            STRICT RULES:
-          - NEVER guess, invent, or use placeholder IDs (like '12345') for 'appointment_slot_id'. 
-          - You MUST execute 'find_slot_by_time' first to obtain the real MongoDB ObjectId from the database. Only use the ID returned by that tool.
-            
-            Booking & Availability Workflow:
-            1. Use check_appointment_available if the user wants to see general free slots for a date.
-          
-            3. To use book_appointment, you MUST have:
-                - appointment_slot_id \
-                - fullname
-                - email
-                - phone
-            4. Ask for any missing details (like email or phone or fullname) before calling book_appointment .
-            
-            If a tool returns an error, explain it clearly.
-            `,
+                Current date and time: ${todayStr} at ${currentTimeStr}.
+                Interpret all dates and times using this current date and time. Resolve relative dates such as "today", "tomorrow", and "next week" to an absolute date in YYYY-MM-DD format before calling a tool.
+
+                AVAILABLE TOOLS
+                - check_appointment_available: finds available appointment slots for a date.
+                - find_slot_by_time: finds one specific slot using a date and start time and returns its real appointment_slot_id.
+                - book_appointment: books a slot using appointment_slot_id, fullname, email, and phone.
+
+                Choose the tool based on what the user wants:
+
+                A. CHECK AVAILABILITY
+                When the user asks what appointments are available, what times are free, or asks to check availability:
+                1. If the user has not given a date, ask which date they want to check.
+                2. If specific time is ask than call find_slot_by_time tool . 
+                3. Otherwise, call check_appointment_available with the requested date in YYYY-MM-DD format.
+                4. Present the available slots returned by the tool.
+                5. Do not book a slot unless the user asks you to book one.
+                
+                2. FIND SLOT BY TIME
+                -If user ask to book than call the tool-  book_appointment , dont call find_slot_by_time.
+                -Use this when the user asks whether an appointment is available at a specific date and start time.
+                -This includes questions like "Is there an appointment at 10 AM?"
+                -Call it with date and start_time. Do not call check_appointment_available for these requests.
+                -Report the result returned by the tool. Do not book an appointment.
+                -Call it with:
+                - date
+                - start_time
+
+
+                C. FOR BOOKING REQUEST
+                - Ask for the date, time, full name, email, and phone if any are missing.
+                - When you have them, call book_appointment with date, start_time, fullname, email, and phone.
+                - Call book_appointment for the action like book appointment, schedule me for, book for tomorrow,
+                - Do not call find_slot_by_time or check_appointment_available for a booking request.
+                - The booking tool checks whether the requested time is available and books it.
+                - Confirm the booking only after book_appointment succeeds.
+                
+
+                IMPORTANT TOOL RULES
+                - For a booking request, use find_slot_by_time first, then book_appointment. Do not call check_appointment_available first unless the user also asked to see available options.
+                - For an availability request, use check_appointment_available. Do not call find_slot_by_time unless the user selects a specific time and asks to book it.
+                - Never guess, invent, alter, or use a placeholder appointment_slot_id. Use only the ID returned by find_slot_by_time.
+                - Do not call book_appointment without a real appointment_slot_id and all required contact details.
+                - Do not call a tool just because the user provided some fields. First identify whether they want to check availability or book.
+                - Ignore extra details that the tools do not accept, such as an address, unless the user asks about them. Do not pass unsupported fields to tools.
+                - If a tool returns an error, explain it clearly. Never claim a slot was checked or booked unless the corresponding tool call succeeded.
+                - Do not offer or book a time earlier than ${currentTimeStr} when the requested date is today.
+                - If a date or time is ambiguous, ask the user to clarify before calling a tool.
+                `,
         },
         { role: 'user', content: prompt },
       ];
@@ -201,10 +228,8 @@ export function agentAssistantFactory(slotRepo, bookRepo) {
           return {
             type: 'data',
             data: {
-              appointment_slot_id: slot._id.toString(),
-              date: date,
-              start_time: start_time,
-              status: slot.booked === 0 ? 'available' : 'booked',
+              type: 'date',
+              data: slot,
             },
           };
         }
@@ -234,7 +259,8 @@ export function agentAssistantFactory(slotRepo, bookRepo) {
           console.log('data', data);
 
           // 3. Save to database
-          const createdBooking = await bookRepo.bookingSlot(data);
+          // const createdBooking = await bookRepo.bookingSlot(data);
+          const createdBooking = await bookService.bookSlot(data);
 
           return {
             type: 'data',
@@ -245,6 +271,34 @@ export function agentAssistantFactory(slotRepo, bookRepo) {
         default:
           return { error: 'unknown tool' };
       }
+    },
+
+    async fetchResponseToUser(from, response) {
+      console.log('response', response);
+
+      const result = await fetch(
+        `https://graph.facebook.com/v26.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.WABA_ACCESS_TOKEN}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messaging_product: 'whatsapp',
+            to: from,
+            type: 'text',
+            text: { body: response.answer },
+          }),
+        }
+      );
+
+      if (!result.ok) {
+        const details = await result.text();
+        throw new Error(`WhatsApp send failed (${result.status}): ${details}`);
+      }
+
+      console.log('WhatsApp accepted the reply:', await result.json());
     },
   };
 }

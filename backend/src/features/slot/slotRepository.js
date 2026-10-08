@@ -118,6 +118,17 @@ export class SlotRepository {
     return slot;
   }
 
+  async appointmentAvailable(date, start_time) {
+    const targetStartTime = new Date(`${date}T${start_time}:00.000Z`);
+
+    const slot = await this.db.collection(this.collectionName).findOne({
+      slot_start: targetStartTime,
+      booked: 0,
+    });
+
+    return slot;
+  }
+
   //Valid date is greater than current date
   async isDateValid(slot_id) {
     const result = await this.db
