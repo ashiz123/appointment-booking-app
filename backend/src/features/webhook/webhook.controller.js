@@ -40,8 +40,10 @@ export async function receiveWebhook(req, res, next) {
   try {
     console.log('text', text);
     const service = await agentAssistantService();
-    const answer = await service.agentService(text);
-    console.log('answer', answer);
+    await service.fetchResponseToUser(from, {
+      answer: 'Responding....',
+    });
+    const answer = await service.agentService(from, text);
     await service.fetchResponseToUser(from, answer);
   } catch (error) {
     console.error(error);

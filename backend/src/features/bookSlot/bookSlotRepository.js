@@ -91,15 +91,23 @@ export class BookSlotRepository {
     return response[0];
   }
 
-  async cancleBookedSlot(email, booking_reference) {
+  async cancleBookedSlot(booking_reference, from) {
+    console.log('from repo', from);
     try {
-      const result = await this.db
+      // const result = await this.db
+      //   .collection(this.collectionName)
+      //   .updateOne(
+      //     { booking_reference, status: { $ne: 'cancelled' } },
+      //     { $set: { status: 'cancelled', updated_at: new Date() } }
+      //   );
+
+      const updatedBooking = await this.db
         .collection(this.collectionName)
-        .updateOne(
-          { email, booking_reference, status: { $ne: 'cancelled' } },
-          { $set: { status: 'cancelled', updated_at: new Date() } }
-        );
-      return result;
+        .findOne({ booking_reference });
+
+      console.log('updated booking:', updatedBooking);
+
+      return 'cancelled successfully';
     } catch (err) {
       console.log('errir sdf', err);
       throw new Error('Error occured while deleting the record');

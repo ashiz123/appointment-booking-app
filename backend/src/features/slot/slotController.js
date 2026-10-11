@@ -4,7 +4,6 @@ import {
   timeToMinute,
 } from '../../shared/utils/dateTimeCovert.js';
 import { getLogger } from '../../shared/utils/logger.js';
-const logger = getLogger();
 
 export async function createSlot(req, res, next) {
   //validation - express-validator in route

@@ -29,10 +29,9 @@ export async function rescheduleController(req, res, next) {
 
 export async function cancelController(req, res, next) {
   try {
-    const { email } = req.params;
     const { booking_reference } = req.body;
     const service = await bookSlotService();
-    const result = await service.cancelAppointment(email, booking_reference);
+    const result = await service.cancelAppointment(booking_reference);
     return responseHandler(res, result);
   } catch (err) {
     next(err);

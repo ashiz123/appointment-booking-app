@@ -39,6 +39,7 @@ export function bookSlotFactory(bookRepo, slotRepo) {
           result = {
             success: true,
             status: 200,
+            date: bookingResult,
             message: 'Slot booked successfully',
           };
         } else {
@@ -59,6 +60,7 @@ export function bookSlotFactory(bookRepo, slotRepo) {
     },
 
     async rescheduleAppointment(booking_reference, appointment_slot_id) {
+      console.log('appointment_slot_id:', appointment_slot_id);
       const slot_id = new ObjectId(String(appointment_slot_id));
       const isValidDateToBook = await slotRepo.isDateValid(slot_id); //check the valid date to book. Is it greater than current date and time
 
@@ -107,16 +109,17 @@ export function bookSlotFactory(bookRepo, slotRepo) {
       }
     },
 
-    async cancelAppointment(email, booking_reference) {
+    async cancelAppointment(booking_reference, from) {
       try {
-        if (!email) {
-          throw new Error('Email is required');
+        //Get the email from the user collection.
+        if (!booking_reference) {
+          throw new Error('Booking reference is required');
         }
 
         const cancelAppointment = await bookRepo.cancleBookedSlot(
-          email,
-          booking_reference
-        );
+          booking_reference,
+          from
+        ); //send from to repo
 
         if (
           cancelAppointment.matchedCount === 0 ||
@@ -127,13 +130,13 @@ export function bookSlotFactory(bookRepo, slotRepo) {
           );
         }
 
-        const text = 'Your appointment is cancelled ';
-        await sendAppointmentCancelEmail(
-          email,
-          booking_reference,
-          text,
-          new Date()
-        );
+        // const text = 'Your appointment is cancelled ';
+        // await sendAppointmentCancelEmail(
+        //   email,
+        //   booking_reference,
+        //   text,
+        //   new Date()
+        // );
         return {
           success: true,
           status: 200,

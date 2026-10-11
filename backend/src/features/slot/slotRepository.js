@@ -41,25 +41,53 @@ export class SlotRepository {
     return slot;
   }
 
+  // async bookingSeat(slot_id) {
+  //   const slot = await this.db
+  //     .collection('appointment_slots')
+  //     .findOne({ _id: slot_id });
+  //   if (!slot)
+  //     throw new AppError('resourceNotFound', [{ msg: 'Slot not found' }]);
+
+  //   if (slot.total_seats - slot.booked === 0) {
+  //     throw new AppError('slotBookingExceeded', [
+  //       { msg: 'Slot booking trying to exceed total seats' },
+  //     ]);
+  //   }
+
+  //   const result = await this.db
+  //     .collection(this.collectionName)
+  //     .updateOne(
+  //       { _id: slot_id, booked: { $lt: slot.total_seats } },
+  //       { $inc: { booked: 1 }, $set: { updated_at: new Date() } }
+  //     );
+
+  //   return result;
+  // }
+
   async bookingSeat(slot_id) {
-    const slot = await this.db
-      .collection('appointment_slots')
-      .findOne({ _id: slot_id });
-    if (!slot)
-      throw new AppError('resourceNotFound', [{ msg: 'Slot not found' }]);
+    const result = await this.db.collection('appointment_slots').updateOne(
+      {
+        _id: slot_id,
+        $expr: { $lt: ['$booked', '$total_seats'] },
+      },
+      {
+        $inc: { booked: 1 },
+        $set: { updated_at: new Date() },
+      }
+    );
 
-    if (slot.total_seats - slot.booked === 0) {
-      throw new AppError('slotBookingExceeded', [
-        { msg: 'Slot booking trying to exceed total seats' },
-      ]);
+    if (result.matchedCount === 0) {
+      // Check whether the slot exists to distinguish "not found" from "full".
+      const slot = await this.db
+        .collection('appointment_slots')
+        .findOne({ _id: slot_id }, { projection: { _id: 1 } });
+
+      if (!slot) {
+        throw new AppError('resourceNotFound', [{ msg: 'Slot not found' }]);
+      }
+
+      throw new AppError('slotBookingExceeded', [{ msg: 'Slot is full' }]);
     }
-
-    const result = await this.db
-      .collection(this.collectionName)
-      .updateOne(
-        { _id: slot_id, booked: { $lt: slot.total_seats } },
-        { $inc: { booked: 1 }, $set: { updated_at: new Date() } }
-      );
 
     return result;
   }
