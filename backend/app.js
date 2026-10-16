@@ -8,7 +8,6 @@ import customerRouter from './src/shared/routes/customerRoutes.js';
 import webhookRouter from './src/features/webhook/webhook.route.js';
 import errorHandler from './src/shared/middlewares/errorHandlingMiddleware.js';
 
-dotenv.config();
 const app = express();
 app.use(express.json()); //parse JSON bodies
 app.use(morgan('dev'));

@@ -1,4 +1,10 @@
-export function getAppointmentMessages(todayStr, currentTimeStr, userPrompt) {
+import {
+  todayStr,
+  currentTimeStr,
+} from '../../../shared/utils/dateTimeConvert.js';
+
+export function getSystemPrompt() {
+  console.log(todayStr, currentTimeStr);
   return [
     {
       role: 'system',
@@ -75,6 +81,5 @@ export function getAppointmentMessages(todayStr, currentTimeStr, userPrompt) {
                 - If a date or time is ambiguous, ask the user to clarify before calling a tool.
                 `,
     },
-    { role: 'user', content: userPrompt },
   ];
 }

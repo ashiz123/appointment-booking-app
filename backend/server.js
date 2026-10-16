@@ -8,10 +8,11 @@ import { bookingIndex } from './src/features/bookSlot/bookingIndex.js';
 
 const startServer = async () => {
   try {
-    const db = await connect();       
-    await slotIndex(db);              
-    await bookingIndex(db);           
-    console.log('node environment', process.env.PORT);     
+    const db = await connect();
+    app.locals.db = db;
+    await slotIndex(db); //index
+    await bookingIndex(db); //index
+    console.log('node environment', process.env.PORT);
     const port = process.env.PORT || 3000;
     app.listen(port, () => console.log(`Server running on port ${port}`));
   } catch (err) {

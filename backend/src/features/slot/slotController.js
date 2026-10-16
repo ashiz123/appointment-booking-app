@@ -2,7 +2,7 @@ import { slotService } from './slotService.js';
 import {
   minutesToDate,
   timeToMinute,
-} from '../../shared/utils/dateTimeCovert.js';
+} from '../../shared/utils/dateTimeConvert.js';
 import { getLogger } from '../../shared/utils/logger.js';
 
 export async function createSlot(req, res, next) {

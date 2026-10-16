@@ -1,12 +1,28 @@
 import { Ollama } from 'ollama';
 import { buildBooking } from '../../bookSlot/bookingSlotModel.js';
-import { getAppointmentMessages } from '../tools/getAppointmentMessages.js';
+import { getSystemPrompt } from '../tools/systemPrompt.js';
+import { checkGreeting } from '../../../shared/utils/checkGreeting.js';
+import { finalResponseUsingLLM } from '../tools/finalResponseUsingLLM.js';
+import { createToolReply } from '../tools/toolReply.js';
+import { getStatePrompt } from '../tools/statePrompt.js';
 
-export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
+export function agentAssistantFactory(
+  slotRepo,
+  messageRepo,
+  conversationRepo,
+  bookService
+) {
   return {
     ollama: new Ollama({
       host: process.env.OLLAMA_HOST || 'http://host.docker.internal:11434',
     }),
+
+    maxToolRounds: 5,
+    historyLimit: 20,
+
+    // greetingPattern:
+    //   /^(hi|hello|hey|good morning|good afternoon|good evening)[.!?,\s]*$/i,
+
     tools: [
       {
         type: 'function',
@@ -165,12 +181,41 @@ export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
     ],
 
     async agentService(from, prompt) {
-      const todayStr = new Date().toISOString().split('T')[0];
-      const currentTimeStr = new Date().toTimeString().slice(0, 5);
+      const conversation = await conversationRepo.getOrCreateConversation(from);
+      const convId = conversation._id;
+      await messageRepo.createMessage({
+        conversationId: convId,
+        role: 'user',
+        content: prompt,
+      });
 
-      const messages = getAppointmentMessages(todayStr, currentTimeStr, prompt);
+      if (checkGreeting(prompt)) {
+        let reply =
+          'Hi! I can help you check availability, book, reschedule, or cancel an appointment.';
+        await messageRepo.createMessage({
+          conversationId: convId,
+          role: 'assistant',
+          content: reply,
+        });
 
-      // 2. When a user wants to **book** a specific time (e.g., "book me at 09:00"), **first use find_slot_by_time** to look up and retrieve the appointment_slot_id.
+        return { type: 'answer', answer: reply };
+      }
+
+      const history = await messageRepo.getRecentMessages(
+        convId,
+        this.historyLimit
+      );
+
+      const stateMessage = getStatePrompt(conversation);
+
+      const systemPrompt = getSystemPrompt();
+      const systemMessage = JSON.stringify(systemPrompt[0]);
+
+      const messages = [
+        { role: 'system', content: systemMessage },
+        stateMessage,
+        ...history.map(({ role, content }) => ({ role, content })),
+      ];
 
       const initialResponse = await this.ollama.chat({
         model: 'qwen3',
@@ -180,47 +225,49 @@ export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
         options: { num_predict: 100 },
       });
 
-      const toolCall = initialResponse.message.tool_calls?.[0];
-      console.log({
-        content: initialResponse.message.content,
-        toolCalls: initialResponse.message.tool_calls?.[0],
-      });
+      const assistantMessage = initialResponse.message;
 
-      if (!toolCall) {
+      const toolCalls = assistantMessage.tool_calls?.[0];
+
+      if (!toolCalls) {
+        const answer = assistantMessage.content ?? '';
+
+        console.log('asnwer inside toocalls', answer);
+
+        await messageRepo.createMessage({
+          conversationId: convId,
+          role: 'assistant',
+          content: answer,
+        });
+
+        //exit the function from here.
         return {
           type: 'answer',
-          answer: initialResponse.message.content,
+          answer,
         };
       }
 
-      messages.push(initialResponse.message);
+      const toolName = toolCalls.function.name;
+      const toolArgs = toolCalls.function.arguments;
+      messages.push(assistantMessage);
 
-      const result = await this.executeTool(
-        toolCall.function.name,
-        toolCall.function.arguments,
-        from
-      );
+      //Call the tool and get the response
+      const result = await this.executeTool(toolName, toolArgs, from);
+      console.log('result', result);
 
-      messages.push({
-        role: 'tool',
-        tool_name: toolCall.function.name,
-        content: JSON.stringify(result),
-      });
+      //Answer with LLM
+      // const answer = await finalResponseUsingLLM(
+      //   convId,
+      //   messages,
+      //   toolName,
+      //   result
+      // );
 
-      const finalResponse = await this.ollama.chat({
-        model: 'qwen3',
-        messages,
-        tools: this.tools,
-        think: false,
-        options: {
-          num_predict: 100,
-        },
-      });
+      //Answer manually
+      const answer = createToolReply(toolName, toolArgs, from);
+      console.log('answer', answer);
 
-      return {
-        type: 'answer',
-        answer: finalResponse.message.content,
-      };
+      return { type: 'answer', answer };
     },
 
     async executeTool(name, args, from) {
@@ -257,6 +304,7 @@ export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
           const { date, start_time, fullname, email, phone, status } = args;
 
           // 1. Safely look up the real slot ID from the database on the backend
+
           const slot = await slotRepo.findSlotByStartTime(date, start_time);
 
           if (!slot) {
@@ -274,8 +322,6 @@ export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
             phone,
             status || 'booked'
           );
-
-          console.log('data', data);
 
           // 3. Save to database
           // const createdBooking = await bookRepo.bookingSlot(data);
@@ -345,8 +391,6 @@ export function agentAssistantFactory(slotRepo, bookRepo, bookService) {
     },
 
     async fetchResponseToUser(from, response) {
-      console.log('response', response);
-
       const result = await fetch(
         `https://graph.facebook.com/v26.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
         {

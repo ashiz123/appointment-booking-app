@@ -7,6 +7,7 @@
     "start": "node server.js",
     "dev": "nodemon --legacy-watch server.js",
     "lint": "eslint .",
+    "migrate": "docker exec -it backend node src/shared/config/migrate.js",
     "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
@@ -20,7 +21,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0",
+    "mongoose": "^8.24.5",
     "morgan": "~1.9.1",
     "nodemailer": "^7.0.6",
     "ollama": "^0.6.4",

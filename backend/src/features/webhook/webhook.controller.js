@@ -38,14 +38,12 @@ export async function receiveWebhook(req, res, next) {
 
   res.sendStatus(200);
   try {
-    console.log('text', text);
     const service = await agentAssistantService();
-    await service.fetchResponseToUser(from, {
-      answer: 'Responding....',
-    });
     const answer = await service.agentService(from, text);
+
     await service.fetchResponseToUser(from, answer);
   } catch (error) {
+    console.dir(error.errInfo, { depth: null });
     console.error(error);
   }
 }
