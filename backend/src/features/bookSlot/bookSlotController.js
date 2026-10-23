@@ -7,8 +7,9 @@ export async function bookingController(req, res, next) {
     const data = req.body;
     const service = await bookSlotService();
     const result = await service.bookSlot(data);
-    return responseHandler(res, result);
+    res.status(200).json(result);
   } catch (err) {
+    console.log('error', err);
     next(err);
   }
 }

@@ -6,6 +6,14 @@ const ollama = new Ollama({
   host: process.env.OLLAMA_HOST || 'http://host.docker.internal:11434',
 });
 
+//Answer with LLM
+// const answer = await finalResponseUsingLLM(
+//   convId,
+//   messages,
+//   toolName,
+//   result
+// );
+
 export async function finalResponseUsingLLM(
   convId,
   messages,

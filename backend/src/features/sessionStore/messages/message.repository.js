@@ -15,7 +15,6 @@ export class MessageRepository {
       };
 
       await this.collection.insertOne(message);
-      console.log('message recorded successfully');
     } catch (error) {
       console.log('Error from message repository', error);
     }

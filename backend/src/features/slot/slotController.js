@@ -3,7 +3,6 @@ import {
   minutesToDate,
   timeToMinute,
 } from '../../shared/utils/dateTimeConvert.js';
-import { getLogger } from '../../shared/utils/logger.js';
 
 export async function createSlot(req, res, next) {
   //validation - express-validator in route
@@ -41,9 +40,13 @@ export async function createSlot(req, res, next) {
         service_id,
         seats
       );
+
+      //if generateSlot failed , it does not comes here.
+
       slots.push({
         slotStart,
         slotEnd,
+        seats,
         success: generateSlot.success,
         error: generateSlot.success ? null : 'Slot not created',
       });

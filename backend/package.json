@@ -8,7 +8,8 @@
     "dev": "nodemon --legacy-watch server.js",
     "lint": "eslint .",
     "migrate": "docker exec -it backend node src/shared/config/migrate.js",
-    "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest",
+    "mcp:appointments": "node src/features/mcp/appointment.server.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

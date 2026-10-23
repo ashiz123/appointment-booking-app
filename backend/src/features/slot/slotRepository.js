@@ -41,31 +41,52 @@ export class SlotRepository {
     return slot;
   }
 
-  // async bookingSeat(slot_id) {
-  //   const slot = await this.db
-  //     .collection('appointment_slots')
-  //     .findOne({ _id: slot_id });
-  //   if (!slot)
-  //     throw new AppError('resourceNotFound', [{ msg: 'Slot not found' }]);
+  async bookSeat(date, start_time) {
+    try {
+      console.log('date and strt_time', date, start_time);
+      const targetStartTime = new Date(`${date}T${start_time}:00.000Z`);
+      console.log('target start time', targetStartTime);
 
-  //   if (slot.total_seats - slot.booked === 0) {
-  //     throw new AppError('slotBookingExceeded', [
-  //       { msg: 'Slot booking trying to exceed total seats' },
-  //     ]);
-  //   }
+      if (Number.isNaN(targetStartTime.getTime())) {
+        throw new Error('Invalid date or time');
+      }
 
-  //   const result = await this.db
-  //     .collection(this.collectionName)
-  //     .updateOne(
-  //       { _id: slot_id, booked: { $lt: slot.total_seats } },
-  //       { $inc: { booked: 1 }, $set: { updated_at: new Date() } }
-  //     );
+      const slot = await this.db
+        .collection(this.collectionName)
+        .findOneAndUpdate(
+          {
+            slot_start: {
+              $eq: targetStartTime,
+              $gt: new Date(),
+            },
+            $expr: { $lt: ['$booked', '$total_seats'] },
+          },
+          { $inc: { booked: 1 } },
+          { returnDocument: 'after' }
+        );
 
-  //   return result;
-  // }
+      console.log('slots', slot);
+
+      if (!slot) {
+        return {
+          success: false,
+          message: 'No future slot with seats available.',
+        };
+      }
+
+      return { success: true, slot };
+    } catch (error) {
+      console.error('Failed to book seat:', error);
+
+      return {
+        success: false,
+        message: 'Could not book the appointment due to a server error.',
+      };
+    }
+  }
 
   async bookingSeat(slot_id) {
-    const result = await this.db.collection('appointment_slots').updateOne(
+    const result = await this.db.collection(this.collectionName).updateOne(
       {
         _id: slot_id,
         $expr: { $lt: ['$booked', '$total_seats'] },
@@ -136,23 +157,21 @@ export class SlotRepository {
   }
 
   async findSlotByStartTime(date, start_time) {
+    console.log('it comes heres', date, start_time);
     const targetStartTime = new Date(`${date}T${start_time}:00.000Z`);
 
-    const slot = await this.db.collection(this.collectionName).findOne({
-      slot_start: targetStartTime,
-      booked: 0,
-    });
-
-    return slot;
-  }
-
-  async appointmentAvailable(date, start_time) {
-    const targetStartTime = new Date(`${date}T${start_time}:00.000Z`);
+    if (isNaN(targetStartTime.getTime()))
+      throw new Error(`Invalid date/time: ${date} ${start_time}`);
 
     const slot = await this.db.collection(this.collectionName).findOne({
-      slot_start: targetStartTime,
-      booked: 0,
+      slot_start: {
+        $eq: targetStartTime,
+        $gt: new Date(),
+      },
+      $expr: { $lt: ['$booked', '$total_seats'] },
     });
+
+    console.log('slot is available', slot);
 
     return slot;
   }

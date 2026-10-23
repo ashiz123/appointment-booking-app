@@ -23,15 +23,17 @@ export class BookSlotRepository {
 
   async bookingSlot(bookingDetail) {
     try {
+      console.log('control comes here @ bookintSlot', bookingDetail);
       const data = {
         ...bookingDetail,
-        status: 'booked',
         created_at: new Date(),
         updated_at: new Date(),
       };
       const result = await this.db
         .collection(this.collectionName)
         .insertOne(data);
+
+      console.log('result from bookingSlot in repository', result);
 
       if (!result.acknowledged) {
         throw new Error('Booking insert failed');
@@ -91,7 +93,7 @@ export class BookSlotRepository {
     return response[0];
   }
 
-  async cancleBookedSlot(booking_reference, from) {
+  async cancleBookedSlot(from) {
     console.log('from repo', from);
     try {
       // const result = await this.db
@@ -101,13 +103,16 @@ export class BookSlotRepository {
       //     { $set: { status: 'cancelled', updated_at: new Date() } }
       //   );
 
-      const updatedBooking = await this.db
+      const cancelBooking = await this.db
         .collection(this.collectionName)
-        .findOne({ booking_reference });
+        .updateOne(
+          { phone: from, status: { $ne: 'cancelled' } },
+          { $set: { status: 'cancelled', updated_at: new Date() } }
+        );
 
-      console.log('updated booking:', updatedBooking);
+      console.log('cancel booking', cancelBooking);
 
-      return 'cancelled successfully';
+      return cancelBooking;
     } catch (err) {
       console.log('errir sdf', err);
       throw new Error('Error occured while deleting the record');

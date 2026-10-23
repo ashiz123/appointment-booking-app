@@ -7,55 +7,43 @@ import {
 
 export function bookSlotFactory(bookRepo, slotRepo) {
   return {
-    async bookSlot({ appointment_slot_id, fullname, email, phone, status }) {
-      let result;
-      let bookedSeat;
-      const slot_id = new ObjectId(String(appointment_slot_id));
-      const isValidDateToBook = await slotRepo.isDateValid(slot_id); //check the valid date to book. Is it greater than current date and time
-
-      if (!isValidDateToBook) {
-        return {
-          success: false,
-          status: 400,
-          message: 'Date must be greater than current date and time',
-        };
-      }
-
+    async bookSlot(data) {
       try {
-        bookedSeat = await slotRepo.bookingSeat(slot_id);
+        const { request_date, request_time, fullname, email, phone, status } =
+          data;
 
-        if (bookedSeat.acknowledged && bookedSeat.modifiedCount > 0) {
-          const bookingResult = await bookRepo.bookingSlot(
-            buildBooking(slot_id, fullname, email, phone, status)
-          );
+        const bookedSeat = await slotRepo.bookSeat(request_date, request_time); //To update the seats of slot first
+        console.log('bookedSeat', bookedSeat);
 
-          //send appointmentEmail
-          await sendAppointmentEmail(
-            email,
-            fullname,
-            bookingResult.slot_start,
-            bookingResult.booking_reference
-          );
-          result = {
-            success: true,
-            status: 200,
-            date: bookingResult,
-            message: 'Slot booked successfully',
-          };
-        } else {
-          throw new Error('Issue with the appointment slot booking');
+        if (!bookedSeat.success) {
+          throw new Error('Booking seat failed');
         }
 
-        return result;
+        const { _id } = bookedSeat.slot;
+
+        //To do the booking for that above seat
+        const bookingDetail = {
+          appointment_slot_id: _id,
+          fullname,
+          email,
+          phone,
+          status,
+        };
+
+        //Add the booking record
+        const bookSlot = await bookRepo.bookingSlot(bookingDetail);
+
+        return bookSlot;
       } catch (err) {
-        if (bookedSeat.acknowledged && bookedSeat.modifiedCount > 0) {
-          const canceled = await slotRepo.unbookingSeat(slot_id);
-          if (canceled.modifiedCount === 1) {
-            console.log('something misssing here');
-          }
-        }
+        console.log('Error to book slot', err);
+        // if (bookedSeat.acknowledged && bookedSeat.modifiedCount > 0) {
+        //   const canceled = await slotRepo.unbookingSeat(slot_id);
+        //   if (canceled.modifiedCount === 1) {
+        //     console.log('something misssing here');
+        //   }
+        // }
 
-        return { success: false, status: 409, message: err.message };
+        // return { success: false, status: 409, message: err.message };
       }
     },
 

@@ -21,7 +21,12 @@ export async function runBookSlotMigration(db) {
           pattern: '^[\\w.-]+@([\\w-]+\\.)+[\\w-]{2,4}$',
           description: 'Email field ',
         },
-        phone: { bsonType: 'string', pattern: '^[0-9]{10}$' },
+        phone: {
+          bsonType: 'string',
+          pattern: '^\\+[1-9][0-9]{7,14}$',
+          description:
+            'Phone number in international format, e.g. +447911123456',
+        },
         appointment_slot_id: {
           bsonType: 'objectId',
           description: 'Booking time',
@@ -36,9 +41,8 @@ export async function runBookSlotMigration(db) {
         },
         status: {
           bsonType: 'string',
-          enum: ['booked', 'completed', 'cancelled', 'rescheduled'],
+          enum: ['free', 'booked', 'completed', 'cancelled', 'rescheduled'],
           description: 'Status field',
-          //   default: 'booked',
         },
         created_at: { bsonType: 'date' },
         updated_at: { bsonType: 'date' },

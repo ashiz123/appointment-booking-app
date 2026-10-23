@@ -23,19 +23,5 @@ export function minutesToDate(date, minutes) {
   return new Date(date.getTime() + minutes * 60000);
 }
 
-// export const todayStr = new Intl.DateTimeFormat('en-CA', {
-//   timeZone: 'Europe/London',
-//   year: 'numeric',
-//   month: '2-digit',
-//   day: '2-digit',
-// }).format(now);
-
-// export const currentTimeStr = new Intl.DateTimeFormat('en-GB', {
-//   timeZone: 'Europe/London',
-//   hour: '2-digit',
-//   minute: '2-digit',
-//   hourCycle: 'h23',
-// }).format(now);
-
 export const todayStr = new Date().toISOString().split('T')[0];
 export const currentTimeStr = new Date().toTimeString().slice(0, 5);
