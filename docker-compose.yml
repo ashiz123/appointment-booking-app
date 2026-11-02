@@ -30,6 +30,7 @@ services:
       - DOCKER=true
       - NODE_ENV=development
       - REDIS_URL=redis://redis:6379
+      - MONGODB_URI=mongodb://mongodb:27017
 
   frontend:
     container_name: frontend
