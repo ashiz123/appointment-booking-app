@@ -39,14 +39,17 @@ export class BookSlotRepository {
         throw new Error('Booking insert failed');
       }
       const matchFilter = { _id: new ObjectId(String(result.insertedId)) };
+
       return await this.fetchBookingByFilter(matchFilter);
     } catch (err) {
+      process.stderr.write(`[BookSlot Error]: ${err.stack || err.message}\n`);
       console.error('MongoDB error code:', err.code);
       console.error(JSON.stringify(err.errInfo?.details, null, 2));
       throw new Error(`Failed to book slot: ${err.message}`);
     }
   }
 
+  //you need the reference to reschedule, like phone number
   async rescheduleBooking(booking_reference, slot_id) {
     try {
       const result = await this.db.collection(this.collectionName).updateOne(

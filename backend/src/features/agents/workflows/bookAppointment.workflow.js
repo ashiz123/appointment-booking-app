@@ -1,11 +1,19 @@
 import { buildBooking } from '../../bookSlot/bookingSlotModel.js';
 import { hasUserDetails } from '../../../shared/utils/hasUserDetails.js';
 
-export function createBookAppointmentWorkflow({ slotRepo, bookService }) {
-  return async function bookAppointmentWorkflow(args) {
+export function bookAppointmentWorkflow({ slotRepo, bookService }) {
+  return async function bookAppointment(args) {
     const { date, start_time, fullname, email, status, phone } = args;
 
-    const userDetail = hasUserDetails({ fullname, email, date, start_time });
+    const userDetail = hasUserDetails({
+      fullname,
+      email,
+      date,
+      start_time,
+      phone,
+    });
+
+    console.log('phone number', phone);
 
     if (userDetail.errors?.length > 0) {
       const result = userDetail.errors;
@@ -44,8 +52,8 @@ export function createBookAppointmentWorkflow({ slotRepo, bookService }) {
     const createdBooking = await bookService.bookSlot(builtData);
 
     if (!createdBooking) {
-      console.log('Problem with booking. Booking unsuccessful');
-      throw new Error('Booking unsuccessful');
+      console.error('Problem with booking. Booking unsuccessful');
+      throw new Error('Booking is unsuccessful');
     }
 
     return {

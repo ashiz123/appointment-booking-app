@@ -1,12 +1,11 @@
 import express from 'express';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
-import { connectRedis } from './src/shared/config/redisClient.js';
-import authRouter from './src/shared/routes/authRoute.js';
-import businessRouter from './src/shared/routes/businessRoute.js';
-import customerRouter from './src/shared/routes/customerRoutes.js';
-import webhookRouter from './src/features/webhook/webhook.route.js';
-import errorHandler from './src/shared/middlewares/errorHandlingMiddleware.js';
+import { connectRedis } from './shared/config/redisClient.js';
+import authRouter from './shared/routes/authRoute.js';
+import businessRouter from './shared/routes/businessRoute.js';
+import customerRouter from './shared/routes/customerRoutes.js';
+import webhookRouter from './features/webhook/webhook.route.js';
+import errorHandler from './shared/middlewares/errorHandlingMiddleware.js';
 
 const app = express();
 app.use(express.json()); //parse JSON bodies

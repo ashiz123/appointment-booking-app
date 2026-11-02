@@ -7,6 +7,9 @@ export function hasUserDetails(args) {
     .toLowerCase();
   const bookingDate = String(args.date ?? '').trim();
   const startTime = String(args.start_time ?? '').trim();
+  const phone = String(args.phone ?? '')
+    .trim()
+    .toLowerCase();
 
   const errors = [];
 
@@ -32,6 +35,10 @@ export function hasUserDetails(args) {
 
   if (!startTime) {
     errors.push('Booking time is required');
+  }
+
+  if (!phone) {
+    errors.push('Phone number is required');
   }
 
   if (errors.length > 0) {

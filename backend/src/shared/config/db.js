@@ -8,11 +8,10 @@ export async function connect() {
     return dbInstance;
   }
 
-  const url = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
+  const url = process.env.MONGODB_URI || 'mongodb://localhost:27020';
   const dbName =
     process.env.DB_NAME ||
     (process.env.NODE_ENV === 'test' ? 'testdb' : 'testdb');
-  console.log(url);
 
   client = new MongoClient(url);
 

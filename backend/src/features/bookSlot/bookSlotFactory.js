@@ -36,6 +36,7 @@ export function bookSlotFactory(bookRepo, slotRepo) {
         return bookSlot;
       } catch (err) {
         console.log('Error to book slot', err);
+        throw err;
         // if (bookedSeat.acknowledged && bookedSeat.modifiedCount > 0) {
         //   const canceled = await slotRepo.unbookingSeat(slot_id);
         //   if (canceled.modifiedCount === 1) {

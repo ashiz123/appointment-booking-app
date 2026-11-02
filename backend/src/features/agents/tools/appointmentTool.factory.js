@@ -1,4 +1,4 @@
-import { createBookAppointmentWorkflow } from '../workflows/bookAppointment.workflow.js';
+import { bookAppointmentWorkflow } from '../workflows/bookAppointment.workflow.js';
 import { createRescheduleAppoinmentWorkflow } from '../workflows/rescheduleAppointment.workflow.js';
 import { cancelAppointmentWorkflow } from '../workflows/cancelAppointment.workflow.js';
 import { checkAvailabilityWorkflow } from '../workflows/checkAppointment.workflow.js';
@@ -7,7 +7,7 @@ import { createAppointmentToolDispatcher } from '../tools/executeTool.js';
 
 export function createAppointmentTools({ slotRepo, bookService }) {
   //dependency Injection
-  const bookAppointmentWF = createBookAppointmentWorkflow({
+  const bookAppointmentWF = bookAppointmentWorkflow({
     slotRepo,
     bookService,
   });
