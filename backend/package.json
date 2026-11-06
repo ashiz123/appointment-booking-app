@@ -7,11 +7,13 @@
     "start": "node src/index.js",
     "dev": "nodemon --legacy-watch src/index.js",
     "lint": "eslint .",
+    "inspector": "npx @modelcontextprotocol/inspector -- node src/index.js",
     "migrate": "docker exec -it backend node src/shared/config/migrate.js",
     "test": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest",
     "mcp:appointments": "node src/features/mcp/appointment.server.js"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@modelcontextprotocol/server": "^2.4.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "~1.4.4",

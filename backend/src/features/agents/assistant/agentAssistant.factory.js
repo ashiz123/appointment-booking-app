@@ -114,8 +114,6 @@ export function agentAssistantFactory(
     },
 
     async fetchResponseToUser(from, response) {
-      console.log('from', from);
-      console.log('answer', response);
       const result = await fetch(
         `https://graph.facebook.com/v26.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
         {

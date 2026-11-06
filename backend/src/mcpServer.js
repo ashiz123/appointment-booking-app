@@ -6,6 +6,7 @@ import { MessageRepository } from './features/sessionStore/messages/message.repo
 import { ConversationRepository } from './features/sessionStore/conversations/conversations.repository.js';
 import { bookAppointmentWorkflow } from './features/agents/workflows/bookAppointment.workflow.js';
 import { createRescheduleAppoinmentWorkflow } from './features/agents/workflows/rescheduleAppointment.workflow.js';
+import { validateFutureDate } from './shared/utils/validateFutureDate.js';
 import { z } from 'zod';
 
 export async function createMCPServer() {
@@ -40,10 +41,34 @@ export async function createMCPServer() {
       }),
     },
     async ({ date }) => {
-      const result = await slotRepo.showSlotsByDay(date);
-      return {
-        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-      };
+      try {
+        validateFutureDate(date);
+
+        const result = await slotRepo.showSlotsByDay(date);
+
+        const sanitizedResult = result.map((slot) => ({
+          time: slot.slot_start,
+          available: slot.total_seats,
+        }));
+
+        return {
+          content: [
+            { type: 'text', text: JSON.stringify(sanitizedResult, null, 2) },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                error: 'Internal database error processing slot check.',
+              }),
+            },
+          ],
+          isError: true,
+        };
+      }
     }
   );
 
@@ -58,9 +83,31 @@ export async function createMCPServer() {
     },
 
     async ({ date, time }) => {
+      //guardrail
+      validateFutureDate(date, time);
+
       const result = await slotRepo.findSlotByStartTime(date, time);
+
+      // 1. Guard against null / missing slot
+      if (!result) {
+        throw new Error(
+          `No available slot found for ${date} at ${time}. It may be fully booked, already passed, or not yet released.`
+        );
+      }
+
+      // 2. Safe to access properties now because result is guaranteed to be an object
+      const sanitizedResult = {
+        date: result.slot_start,
+        totalSeats: result.total_seats,
+        bookedSeats: result.booked,
+        remainingSeats: result.total_seats - result.booked,
+        available: true,
+      };
+
       return {
-        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+        content: [
+          { type: 'text', text: JSON.stringify(sanitizedResult, null, 2) },
+        ],
       };
     }
   );
@@ -104,6 +151,9 @@ export async function createMCPServer() {
         // process.stderr.write(`Booking service started \n`);
         // console.error('it works well');
 
+        //guardrail
+        validateFutureDate(date, start_time);
+
         const result = await bookAppointment({
           date,
           start_time,
@@ -112,9 +162,6 @@ export async function createMCPServer() {
           phone,
         });
 
-        process.stderr.write(`result is here,  ${result.type}\n`);
-
-        // Handle validation errors returned from the workflow
         if (result.type === 'validation') {
           return {
             content: [
@@ -126,7 +173,6 @@ export async function createMCPServer() {
           };
         }
 
-        // Handle slot-not-found or general workflow errors
         if (result.type === 'error') {
           return {
             content: [
@@ -138,15 +184,12 @@ export async function createMCPServer() {
           };
         }
 
-        // Handle success case
         return {
           content: [
             { type: 'text', text: JSON.stringify(result.data, null, 2) },
           ],
         };
       } catch (error) {
-        // This catches any unexpected crashes (DB errors, thrown exceptions, etc.)
-        // and displays the error message directly in your UI response box.
         return {
           content: [
             {

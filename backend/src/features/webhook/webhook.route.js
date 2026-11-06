@@ -1,5 +1,6 @@
 import express from 'express';
-import { verifyWebhook, receiveWebhook } from './webhook.controller.js';
+// import { verifyWebhook, receiveWebhook } from './webhook.controller.js';     //without mcp
+import { verifyWebhook, receiveWebhook } from './webhookMCP.controller.js';
 
 const router = express.Router();
 

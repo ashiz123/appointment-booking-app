@@ -5,7 +5,7 @@ import { slotIndex } from './features/slot/slotIndex.js';
 import { bookingIndex } from './features/bookSlot/bookingIndex.js';
 import { createMCPServer } from './mcpServer.js';
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
-
+import { whatsAppAgentService } from './mcpClient.service.js';
 // const startServer = async () => {
 //   try {
 //     const db = await connect();
@@ -27,6 +27,8 @@ const startServer = async () => {
 
     await slotIndex(db);
     await bookingIndex(db);
+
+    app.locals.whatsAppAgent = await whatsAppAgentService();
 
     console.error(`Node environment: ${process.env.PORT || 'default'}`);
     const port = process.env.PORT || 3000;
